@@ -1283,11 +1283,116 @@
         #printArea {
             display: none;
         }
+
+        /* =========================================
+           RESPONSIVE MOBILE STYLES (NEW)
+           ========================================= */
+        #sidebarOverlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 45;
+            display: none;
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: var(--bg-app);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        @media (max-width: 1024px) {
+            :root {
+                --sidebar-width: 260px;
+            }
+            .sidebar {
+                position: fixed;
+                left: calc(var(--sidebar-width) * -1);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            body.sidebar-open .sidebar {
+                transform: translateX(var(--sidebar-width));
+            }
+            body.sidebar-open #sidebarOverlay {
+                display: block;
+            }
+            .main-wrapper {
+                margin-left: 0 !important;
+            }
+            header {
+                padding: 0 20px;
+            }
+            .mobile-toggle {
+                display: flex;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stat-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            header {
+                padding: 0 15px;
+            }
+            .header-actions {
+                gap: 10px;
+            }
+            .date-text {
+                display: none;
+            }
+            .content-area {
+                padding: 12px;
+            }
+            .btn-sm-mobile {
+                padding: 8px !important;
+                font-size: 11px !important;
+            }
+            /* Make tables scrollable manually */
+            .table-responsive {
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                border-radius: var(--radius-md);
+                border: 1px solid var(--border);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+            .brand-text h1 {
+                font-size: 14px;
+            }
+            .brand-text p {
+                font-size: 9px;
+            }
+            .datetime-container {
+                padding: 4px 10px;
+            }
+            .live-time {
+                font-size: 12px;
+            }
+        }
     </style>
 
 </head>
 
 <body>
+
+    <!-- SIDEBAR OVERLAY (MOBILE) -->
+    <div id="sidebarOverlay" onclick="toggleSidebar()"></div>
 
     <!-- LOGIN GATE OVERLAY -->
     <div id="loginGate">
@@ -1356,10 +1461,13 @@
 
     <div class="main-wrapper">
         <header>
-            <div style="display:flex; align-items:center; gap:12px;">
-                <div style="font-weight: 600; color: var(--text-secondary);">Sistem Manajemen Sekolah</div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <button class="mobile-toggle" onclick="toggleSidebar()">
+                    <i class="material-icons-round">menu</i>
+                </button>
+                <div style="font-weight: 600; color: var(--text-secondary);" class="date-text">Sistem Manajemen Sekolah</div>
                 <button class="btn btn-sm btn-outline" onclick="logoutAdmin()" title="Keluar">
-                    <i class="material-icons-round" style="font-size:16px;">logout</i> Keluar
+                    <i class="material-icons-round" style="font-size:16px;">logout</i> <span class="date-text">Keluar</span>
                 </button>
             </div>
             <div class="header-actions">
@@ -2319,6 +2427,19 @@
         // SECURITY & LOGIN GATE
         // ==========================================
         const ADMIN_PIN_MASTER = "1234"; // PIN DEFAULT
+
+        function toggleSidebar() {
+            document.body.classList.toggle('sidebar-open');
+        }
+
+        // Close sidebar on menu click (Mobile)
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth <= 1024) {
+                    document.body.classList.remove('sidebar-open');
+                }
+            });
+        });
 
         function verifyAdminLogin() {
             const input = document.getElementById('adminPin').value;
@@ -5121,3 +5242,4 @@
 </body>
 
 </html>
+
