@@ -15,6 +15,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
     <style>
         /* =========================================
@@ -998,28 +999,91 @@
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
-        .settings-nav {
+        /* =========================================
+           SETTINGS DASHBOARD STYLES (NEW)
+           ========================================= */
+        .settings-container {
             display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 10px;
-            flex-wrap: wrap;
+            gap: 24px;
+            align-items: flex-start;
         }
 
-        .settings-tab-btn {
-            padding: 8px 16px;
-            border-radius: 8px;
+        .settings-sidebar {
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+        }
+
+        .settings-nav-v {
+            padding: 8px;
+            border-radius: var(--radius-lg);
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .settings-btn-v {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
             cursor: pointer;
             font-size: 13px;
-            color: var(--text-secondary);
             font-weight: 600;
+            color: var(--text-secondary);
             transition: 0.2s;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
         }
 
-        .settings-tab-btn.active {
+        .settings-btn-v:hover {
+            background: var(--bg-app);
+            color: var(--accent);
+        }
+
+        .settings-btn-v.active {
             background: var(--accent);
             color: white;
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.2);
+        }
+
+        .settings-btn-v i {
+            font-size: 20px;
+        }
+
+        .settings-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .settings-group-card {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .settings-group-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--accent);
+            padding-bottom: 12px;
+            border-bottom: 1px dashed var(--border);
         }
 
         .settings-panel {
@@ -1028,6 +1092,82 @@
 
         .settings-panel.active {
             display: block;
+        }
+
+        /* --- CHIPS / BADGES --- */
+        .chip-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px;
+            background: var(--bg-app);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            min-height: 50px;
+            margin-top: 8px;
+        }
+
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+            animation: slideUp 0.2s ease;
+        }
+
+        .chip i {
+            font-size: 14px;
+            color: var(--danger);
+            cursor: pointer;
+            padding: 2px;
+            border-radius: 50%;
+        }
+
+        .chip i:hover {
+            background: var(--danger-bg);
+        }
+
+        .reset-btn {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--danger);
+            cursor: pointer;
+            text-transform: uppercase;
+            text-decoration: underline;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+
+        @media (max-width: 768px) {
+            .settings-container {
+                flex-direction: column;
+            }
+            .settings-sidebar {
+                width: 100%;
+                overflow-x: auto;
+                flex-direction: row;
+                padding-bottom: 10px;
+            }
+            .settings-nav-v {
+                display: flex;
+                flex-direction: row;
+                background: transparent;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+            }
+            .settings-btn-v {
+                white-space: nowrap;
+                background: var(--bg-surface);
+                border: 1px solid var(--border);
+            }
         }
 
         .dynamic-row {
@@ -1559,6 +1699,16 @@
                             <p>Terlambat</p>
                         </div>
                     </div>
+                    <!-- KARTU PERSENTASE PERIODE (BARU) -->
+                    <div class="stat-card" style="border-color: var(--accent); background: linear-gradient(135deg, var(--bg-surface), var(--accent-light));">
+                        <div class="stat-icon" style="background: var(--accent); color: white;">
+                            <i class="material-icons-round">analytics</i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="statPersentase">0%</h3>
+                            <p id="labelPeriode">Periode 26 - 25</p>
+                        </div>
+                    </div>
                     <div class="stat-card">
                         <div class="stat-icon" style="background: #fff4e5; color: #ff9800;">
                             <i class="material-icons-round">event_busy</i>
@@ -1981,154 +2131,226 @@
 
             <!-- TAB SETTINGS -->
             <div id="settings" class="tab-content">
-                <div class="card">
-                    <div class="settings-nav">
-                        <div class="settings-tab-btn active" onclick="openSettingsPanel('p_waktu', this)">Aturan Waktu
-                        </div>
-                        <div class="settings-tab-btn" onclick="openSettingsPanel('p_piket', this)">Jadwal Piket</div>
-                        <div class="settings-tab-btn" onclick="openSettingsPanel('p_master', this)">Pegawai Khusus</div>
-                        <div class="settings-tab-btn" onclick="openSettingsPanel('p_insentif', this)">Nominal Insentif
-                        </div>
-                        <div class="settings-tab-btn" onclick="openSettingsPanel('p_xtra', this)">Ekstrakurikuler</div>
-                        <div class="settings-tab-btn" onclick="openSettingsPanel('p_logo', this)">Logo Sekolah</div>
-                    </div>
-
-                    <!-- PANEL 1: ATURAN JAM -->
-                    <div id="p_waktu" class="settings-panel active">
-                        <h3 style="margin-bottom:15px; font-size:16px;">Batas Waktu Kehadiran</h3>
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-                            <div class="input-group"><label>Batas Datang Kepala Sekolah</label><input type="time"
-                                    id="setBatasKepsek">
-                            </div>
-                            <div class="input-group"><label>Batas Datang Piket</label><input type="time"
-                                    id="setBatasPiket"></div>
-                            <div class="input-group"><label>Batas Datang Guru</label><input type="time"
-                                    id="setBatasReguler"></div>
-                            <div class="input-group"><label>Batas Datang Karyawan</label><input type="time"
-                                    id="setBatasKaryawan">
-                            </div>
-                            <div class="input-group"><label>Batas Jam Pulang</label><input type="time"
-                                    id="setBatasPulang"></div>
-                        </div>
-                        <div style="margin-top:20px; text-align:right;">
-                            <button class="btn btn-primary" onclick="saveRules()">Simpan Aturan Waktu</button>
+                <div class="settings-container">
+                    <!-- SIDEBAR INTERNAL PENGATURAN -->
+                    <div class="settings-sidebar">
+                        <div class="settings-nav-v">
+                            <button class="settings-btn-v active" onclick="openSettingsPanel('p_waktu', this)">
+                                <i class="material-icons-round">schedule</i> Aturan Waktu
+                            </button>
+                            <button class="settings-btn-v" onclick="openSettingsPanel('p_piket', this)">
+                                <i class="material-icons-round">calendar_today</i> Jadwal Piket
+                            </button>
+                            <button class="settings-btn-v" onclick="openSettingsPanel('p_insentif', this)">
+                                <i class="material-icons-round">payments</i> Nominal Insentif
+                            </button>
+                            <button class="settings-btn-v" onclick="openSettingsPanel('p_master', this)">
+                                <i class="material-icons-round">stars</i> Pegawai Khusus
+                            </button>
+                            <button class="settings-btn-v" onclick="openSettingsPanel('p_xtra', this)">
+                                <i class="material-icons-round">sports_soccer</i> Ekstrakurikuler
+                            </button>
+                            <button class="settings-btn-v" onclick="openSettingsPanel('p_logo', this)">
+                                <i class="material-icons-round">image</i> Logo & Nama
+                            </button>
                         </div>
                     </div>
 
-                    <!-- PANEL 2: JADWAL PIKET -->
-                    <div id="p_piket" class="settings-panel">
-                        <h3 style="margin-bottom:15px; font-size:16px;">Jadwal Piket Harian</h3>
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-                            <div class="input-group">
-                                <label>Piket Senin</label><textarea id="piketSenin" rows="4"
-                                    placeholder="Masukkan nama pegawai per baris..."></textarea>
-                            </div>
-                            <div class="input-group">
-                                <label>Piket Selasa</label><textarea id="piketSelasa" rows="4"
-                                    placeholder="Masukkan nama pegawai per baris..."></textarea>
-                            </div>
-                            <div class="input-group">
-                                <label>Piket Rabu</label><textarea id="piketRabu" rows="4"
-                                    placeholder="Masukkan nama pegawai per baris..."></textarea>
-                            </div>
-                            <div class="input-group">
-                                <label>Piket Kamis</label><textarea id="piketKamis" rows="4"
-                                    placeholder="Masukkan nama pegawai per baris..."></textarea>
-                            </div>
-                            <div class="input-group" style="grid-column: span 2">
-                                <label>Piket Jumat</label><textarea id="piketJumat" rows="4"
-                                    placeholder="Masukkan nama pegawai per baris..."></textarea>
+                    <!-- KONTEN UTAMA PENGATURAN -->
+                    <div class="settings-main">
+                        <!-- PANEL 1: ATURAN JAM -->
+                        <div id="p_waktu" class="settings-panel active">
+                            <div class="settings-group-card">
+                                <div class="settings-group-title">
+                                    <i class="material-icons-round">history_toggle_off</i> Batas Waktu Kehadiran
+                                    <span style="flex:1"></span>
+                                    <button class="reset-btn" onclick="resetToDefault('waktu')">Reset Ke Default</button>
+                                </div>
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                                    <div class="input-group">
+                                        <label>Batas Kedatangan Kepala Sekolah</label>
+                                        <input type="time" id="setBatasKepsek">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Batas Kedatangan Piket</label>
+                                        <input type="time" id="setBatasPiket">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Batas Kedatangan Guru</label>
+                                        <input type="time" id="setBatasReguler">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Batas Kedatangan Karyawan</label>
+                                        <input type="time" id="setBatasKaryawan">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Batas Jam Pulang</label>
+                                        <input type="time" id="setBatasPulang">
+                                    </div>
+                                    <div class="input-group" style="background:var(--accent-light); padding:10px; border-radius:12px; border:1px solid var(--accent);">
+                                        <label style="color:var(--accent); font-weight:800;">Hari Kerja Efektif (Periode Ini)</label>
+                                        <input type="number" id="setHariEfektif" placeholder="Misal: 22" style="background:white; border-color:var(--accent);">
+                                        <small style="font-size:10px; color:var(--text-secondary); margin-top:4px; display:block;">Digunakan untuk menghitung % kehadiran tiap periode.</small>
+                                    </div>
+                                </div>
+                                <div style="margin-top:20px; text-align:right;">
+                                    <button class="btn btn-primary" onclick="saveRules()">Simpan Aturan Waktu</button>
+                                </div>
                             </div>
                         </div>
-                        <div style="margin-top:20px; text-align:right;">
-                            <button class="btn btn-primary" onclick="savePiket()">Simpan Jadwal Piket</button>
-                        </div>
-                    </div>
 
-                    <!-- PANEL 3: MASTER PEGAWAI -->
-                    <div id="p_master" class="settings-panel">
-                        <h3 style="margin-bottom:15px; font-size:16px;">Kategori Pegawai</h3>
-                        <div class="input-group">
-                            <label>Karyawan Khusus (Full Insentif)</label>
-                            <textarea id="inputKhusus" rows="2"
-                                placeholder="Masukkan nama pegawai khusus..."></textarea>
-                            <small style="color:var(--text-secondary); font-size:11px;">Pegawai di sini otomatis dapat
-                                full insentif tanpa lihat jam.</small>
-                        </div>
-                        <div class="input-group"
-                            style="margin-top:20px; background:var(--accent-light); padding:10px; border-radius:8px;">
-                            <label style="color:var(--accent); font-weight:700;">INFO SISTEM OTOMATIS:</label>
-                            <p style="font-size:12px; margin-top:4px; color:var(--text-primary);">
-                                • <strong>Kepala Sekolah</strong> otomatis menggunakan aturan jam "Batas Kepala
-                                Sekolah".<br>
-                                • <strong>Piket</strong> otomatis mengikuti Jadwal Piket.<br>
-                                • Pastikan Jabatan di Database Pegawai diisi sesuai.
-                            </p>
-                        </div>
-                        <div class="input-group" style="margin-top:20px;">
-                            <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
-                                <span>Tampilkan Nama Singkat (Initial)</span>
-                                <input type="checkbox" id="toggleShortName" onchange="saveShortNameSetting()"
-                                    style="width:20px; height:20px; accent-color:var(--accent);">
-                            </label>
-                        </div>
-                        <div style="margin-top:20px; text-align:right;">
-                            <button class="btn btn-primary" onclick="saveMasterKhusus()">Simpan Data Pegawai</button>
-                        </div>
-                    </div>
+                        <!-- PANEL 2: JADWAL PIKET -->
+                        <div id="p_piket" class="settings-panel">
+                            <div class="settings-group-card">
+                                <div class="settings-group-title">
+                                    <i class="material-icons-round">engineering</i> Manajer Jadwal Piket
+                                </div>
+                                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:20px;">Pilih hari dan pegawai untuk ditambahkan ke jadwal harian.</p>
+                                
+                                <div style="display:grid; grid-template-columns: 1fr 2fr; gap:12px; align-items:flex-end; margin-bottom:20px; background:var(--bg-app); padding:16px; border-radius:12px;">
+                                    <div class="input-group" style="margin:0;">
+                                        <label>Pilih Hari</label>
+                                        <select id="piketHariSelect">
+                                            <option value="Senin">Senin</option>
+                                            <option value="Selasa">Selasa</option>
+                                            <option value="Rabu">Rabu</option>
+                                            <option value="Kamis">Kamis</option>
+                                            <option value="Jumat">Jumat</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group" style="margin:0; display:flex; gap:8px;">
+                                        <div style="flex:1;">
+                                            <label>Nama Pegawai</label>
+                                            <select id="piketNamaSelect">
+                                                <option value="">-- Pilih Pegawai --</option>
+                                            </select>
+                                        </div>
+                                        <button class="btn btn-primary" onclick="addPiketIndividual()" style="width:auto; height:40px; margin-top:24px;">Tambah</button>
+                                    </div>
+                                </div>
 
-                    <!-- PANEL 4: NOMINAL INSENTIF -->
-                    <div id="p_insentif" class="settings-panel">
-                        <h3 style="margin-bottom:15px; font-size:16px;">Nominal Insentif (Rp)</h3>
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
-                            <div class="input-group"><label>Insentif Piket Tepat Waktu</label><input type="number"
-                                    id="setInsPiket">
-                            </div>
-                            <div class="input-group"><label>Insentif Datang Tertib</label><input type="number"
-                                    id="setInsTertib">
-                            </div>
-                            <div class="input-group"><label>Insentif Pulang</label><input type="number"
-                                    id="setInsPulang"></div>
-                            <div class="input-group"><label>Insentif Pengajian (Tetap)</label><input type="number"
-                                    id="setInsPengajian">
-                            </div>
-                        </div>
-                        <div style="margin-top:20px; text-align:right;">
-                            <button class="btn btn-primary" onclick="saveNominal()">Simpan Nominal</button>
-                        </div>
-                    </div>
+                                <div id="piketChipsContainer" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
+                                    <!-- Container untuk per hari : Senin s/d Jumat -->
+                                    <div class="day-group">
+                                        <label style="font-size:11px; font-weight:800; color:var(--accent);">SENIN</label>
+                                        <div id="chipsSenin" class="chip-container"></div>
+                                    </div>
+                                    <div class="day-group">
+                                        <label style="font-size:11px; font-weight:800; color:var(--accent);">SELASA</label>
+                                        <div id="chipsSelasa" class="chip-container"></div>
+                                    </div>
+                                    <div class="day-group">
+                                        <label style="font-size:11px; font-weight:800; color:var(--accent);">RABU</label>
+                                        <div id="chipsRabu" class="chip-container"></div>
+                                    </div>
+                                    <div class="day-group">
+                                        <label style="font-size:11px; font-weight:800; color:var(--accent);">KAMIS</label>
+                                        <div id="chipsKamis" class="chip-container"></div>
+                                    </div>
+                                    <div class="day-group">
+                                        <label style="font-size:11px; font-weight:800; color:var(--accent);">JUMAT</label>
+                                        <div id="chipsJumat" class="chip-container"></div>
+                                    </div>
+                                </div>
 
-                    <!-- PANEL 5: EKSTRAKURIKULER -->
-                    <div id="p_xtra" class="settings-panel">
-                        <div
-                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                            <h3 style="font-size:16px;">Pengaturan Ekstrakurikuler</h3>
-                            <button class="btn btn-outline btn-sm" onclick="addXtraRow()">+ Tambah</button>
-                        </div>
-                        <div id="xtraListContainer" style="display:flex; flex-direction:column; gap:10px;"></div>
-                        <div style="margin-top:20px; text-align:right;">
-                            <button class="btn btn-primary" onclick="saveXtraList()">Simpan Daftar
-                                Ekstrakurikuler</button>
-                        </div>
-                    </div>
-
-                    <!-- PANEL 6: LOGO SEKOLAH -->
-                    <div id="p_logo" class="settings-panel">
-                        <h3 style="margin-bottom:15px; font-size:16px;">Upload Logo Sekolah</h3>
-                        <div
-                            style="border: 2px dashed var(--border); padding: 20px; border-radius: 8px; text-align: center; background: var(--bg-app);">
-                            <div style="margin-bottom: 10px;">
-                                <img id="previewLogo" src=""
-                                    style="max-height: 100px; display: none; margin: 0 auto; border-radius: 4px;">
-                                <i class="material-icons-round" id="previewIcon"
-                                    style="font-size: 48px; color: var(--text-secondary);">add_photo_alternate</i>
+                                <div style="margin-top:24px; text-align:right;">
+                                    <button class="btn btn-primary" onclick="savePiket()">Simpan Jadwal Piket</button>
+                                </div>
                             </div>
-                            <input type="file" id="fileLogo" accept="image/*" style="display: none;"
-                                onchange="previewImage(this)">
-                            <button class="btn btn-outline" onclick="document.getElementById('fileLogo').click()">Pilih
-                                Gambar</button>
-                            <button class="btn btn-primary" onclick="uploadLogo()" id="btnUploadLogo" disabled
-                                style="opacity: 0.5;">Upload & Simpan</button>
+                        </div>
+
+                        <!-- PANEL 3: NOMINAL INSENTIF -->
+                        <div id="p_insentif" class="settings-panel">
+                            <div class="settings-group-card">
+                                <div class="settings-group-title">
+                                    <i class="material-icons-round">monetization_on</i> Pengaturan Keuangan
+                                    <span style="flex:1"></span>
+                                    <button class="reset-btn" onclick="resetToDefault('insentif')">Reset Ke Default</button>
+                                </div>
+                                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
+                                    <div class="input-group">
+                                        <label>Insentif Piket Tepat Waktu</label>
+                                        <input type="number" id="setInsPiket">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Insentif Datang Tertib</label>
+                                        <input type="number" id="setInsTertib">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Insentif Pulang</label>
+                                        <input type="number" id="setInsPulang">
+                                    </div>
+                                    <div class="input-group">
+                                        <label>Insentif Pengajian (Per Kegiatan)</label>
+                                        <input type="number" id="setInsPengajian">
+                                    </div>
+                                </div>
+                                <div style="margin-top:20px; text-align:right;">
+                                    <button class="btn btn-primary" onclick="saveNominal()">Simpan Nominal</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PANEL 4: PEGAWAI KHUSUS -->
+                        <div id="p_master" class="settings-panel">
+                            <div class="settings-group-card">
+                                <div class="settings-group-title">
+                                    <i class="material-icons-round">verified_user</i> Pegawai Kategori Khusus
+                                </div>
+                                <div class="input-group">
+                                    <label>Daftar Nama (Full Insentif Tanpa Cek Jam)</label>
+                                    <textarea id="inputKhusus" rows="3" placeholder="Masukkan nama pegawai..."></textarea>
+                                    <small style="color:var(--text-secondary); font-size:11px;">Gunakan nama lengkap sesuai database. Gunakan tanda koma (,) jika lebih dari satu.</small>
+                                </div>
+                                <div style="margin-top:20px; text-align:right;">
+                                    <button class="btn btn-primary" onclick="saveMasterKhusus()">Simpan Data Pegawai</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PANEL 5: EKSTRAKURIKULER -->
+                        <div id="p_xtra" class="settings-panel">
+                            <div class="settings-group-card">
+                                <div class="settings-group-title">
+                                    <i class="material-icons-round">military_tech</i> Kegiatan Ekstrakurikuler
+                                    <span style="flex:1"></span>
+                                    <button class="btn btn-outline btn-sm" onclick="addXtraRow()">+ Tambah Baru</button>
+                                </div>
+                                <div id="xtraListContainer" style="display:flex; flex-direction:column; gap:12px;"></div>
+                                <div style="margin-top:20px; text-align:right;">
+                                    <button class="btn btn-primary" onclick="saveXtraList()">Simpan Daftar</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PANEL 6: LOGO & NAMA -->
+                        <div id="p_logo" class="settings-panel">
+                            <div class="settings-group-card">
+                                <div class="settings-group-title">
+                                    <i class="material-icons-round">business</i> Identitas Sekolah
+                                </div>
+                                <div class="input-group">
+                                    <label>Nama Sekolah</label>
+                                    <input type="text" id="setNamaSekolah" placeholder="Contoh: SD Muhammadiyah Serut">
+                                </div>
+                                <div class="input-group">
+                                    <label>Logo Sekolah</label>
+                                    <div style="border: 2px dashed var(--border); padding: 30px; border-radius: 16px; text-align: center; background: var(--bg-app);">
+                                        <div style="margin-bottom: 20px;">
+                                            <img id="previewLogo" src="" style="max-height: 120px; display: none; margin: 0 auto; border-radius: 8px; box-shadow: var(--shadow-md);">
+                                            <div id="logoPlaceholder">
+                                                <i class="material-icons-round" style="font-size: 54px; color: var(--text-secondary);">add_photo_alternate</i>
+                                                <p style="font-size:12px; color:var(--text-secondary);">Seret gambar ke sini atau klik tombol</p>
+                                            </div>
+                                        </div>
+                                        <input type="file" id="fileLogo" accept="image/*" style="display: none;" onchange="previewImage(this)">
+                                        <div style="display:flex; gap:10px; justify-content:center;">
+                                            <button class="btn btn-outline" onclick="document.getElementById('fileLogo').click()">Pilih Gambar</button>
+                                            <button class="btn btn-primary" onclick="uploadLogo()" id="btnUploadLogo" disabled style="opacity: 0.5;">Upload & Simpan</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2496,7 +2718,11 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
         const storage = firebase.storage();
+        const auth = firebase.auth();
         const hariIndo = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+
+        // Anonymous Login for Security Rules
+        auth.signInAnonymously().catch(e => console.error("Auth Error:", e));
 
         // GLOBAL STATE
         let masterSettings = {};
@@ -2585,10 +2811,178 @@
             db.ref('pengaturan/autoAcc').once('value', snap => {
                 if (snap.val() === true) {
                     autoAccMode = true;
-                    document.getElementById('autoAccToggle').classList.add('active');
+                    const el = document.getElementById('autoAccToggle');
+                    if (el) el.classList.add('active');
+                }
+            });
+
+            // Initialize Employee List for Piket Select
+            db.ref('database').on('value', snap => {
+                const employees = snap.val() || {};
+                const selectElement = document.getElementById('piketNamaSelect');
+                if (selectElement) {
+                    selectElement.innerHTML = '<option value="">-- Pilih Pegawai --</option>';
+                    Object.values(employees).forEach(emp => {
+                        if (emp.status === 'Aktif') {
+                            const opt = document.createElement('option');
+                            opt.value = emp.nama;
+                            opt.textContent = emp.nama;
+                            selectElement.appendChild(opt);
+                        }
+                    });
                 }
             });
         };
+
+        function resetToDefault(type) {
+            if (!confirm(`Yakin ingin mengembalikan pengaturan ${type} ke standar sekolah?`)) return;
+
+            if (type === 'waktu') {
+                document.getElementById('setBatasKepsek').value = "07:00";
+                document.getElementById('setBatasPiket').value = "07:00";
+                document.getElementById('setBatasReguler').value = "07:15";
+                document.getElementById('setBatasKaryawan').value = "07:15";
+                document.getElementById('setBatasPulang').value = "14:00";
+                showToast("⏰ Aturan Waktu diatur ke Standar (07:00/07:15)");
+            } else if (type === 'insentif') {
+                document.getElementById('setInsPiket').value = 5000;
+                document.getElementById('setInsTertib').value = 5000;
+                document.getElementById('setInsPulang').value = 5000;
+                document.getElementById('setInsPengajian').value = 10000;
+                showToast("💰 Nominal Insentif diatur ke Standar");
+            }
+        }
+
+        function loadSettings() {
+            db.ref('pengaturan').once('value', snap => {
+                const s = snap.val() || {};
+                masterSettings = s;
+                
+                // Waktu
+                document.getElementById('setBatasKepsek').value = s.batasKepsek || "";
+                document.getElementById('setBatasPiket').value = s.batasPiket || "";
+                document.getElementById('setBatasReguler').value = s.batasReguler || "";
+                document.getElementById('setBatasKaryawan').value = s.batasKaryawan || "";
+                document.getElementById('setBatasPulang').value = s.batasPulang || "";
+                document.getElementById('setHariEfektif').value = s.hariEfektif || "";
+
+                // Piket (Convert multiline string to Chips)
+                const piket = s.piket || {};
+                ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'].forEach(day => {
+                    const container = document.getElementById(`chips${day}`);
+                    if (container) {
+                        container.innerHTML = "";
+                        const names = (piket[day] || "").split('\n').filter(n => n.trim() !== "");
+                        names.forEach(name => addChipUI(day, name));
+                    }
+                });
+
+                // Nominal
+                document.getElementById('setInsPiket').value = s.insPiket || 0;
+                document.getElementById('setInsTertib').value = s.insTertib || 0;
+                document.getElementById('setInsPulang').value = s.insPulang || 0;
+                document.getElementById('setInsPengajian').value = s.insPengajian || 0;
+
+                // Nama Sekolah
+                document.getElementById('setNamaSekolah').value = s.namaSekolah || "SD MUHAMMADIYAH SERUT";
+
+                // Khusus
+                document.getElementById('inputKhusus').value = s.khusus || "";
+
+                // Logo
+                if (s.logoUrl) {
+                    document.getElementById('previewLogo').src = s.logoUrl;
+                    document.getElementById('previewLogo').style.display = 'block';
+                    document.getElementById('logoPlaceholder').style.display = 'none';
+                }
+            });
+        }
+
+        function saveRules() {
+            const data = {
+                batasKepsek: document.getElementById('setBatasKepsek').value,
+                batasPiket: document.getElementById('setBatasPiket').value,
+                batasReguler: document.getElementById('setBatasReguler').value,
+                batasKaryawan: document.getElementById('setBatasKaryawan').value,
+                batasPulang: document.getElementById('setBatasPulang').value,
+                hariEfektif: document.getElementById('setHariEfektif').value
+            };
+            db.ref('pengaturan').update(data).then(() => {
+                showToast("✅ Aturan Waktu & Hari Efektif Disimpan");
+                renderDashboard(); // Refresh stats with new effective days
+            });
+        }
+
+        function getAttendanceCycle(date = new Date()) {
+            const year = date.getFullYear();
+            const month = date.getMonth();
+            const day = date.getDate();
+            let start, end;
+
+            if (day >= 26) {
+                // Rentang Baru (26 bulan ini s.d 25 bulan depan)
+                start = new Date(year, month, 26);
+                end = new Date(year, month + 1, 25);
+            } else {
+                // Rentang Lama (26 bulan lalu s.d 25 bulan ini)
+                start = new Date(year, month - 1, 26);
+                end = new Date(year, month, 25);
+            }
+            return {
+                start: start.toISOString().split('T')[0],
+                end: end.toISOString().split('T')[0],
+                label: `${hariIndo[start.getDay()]}, ${start.getDate()} ${getMonthName(start)} - ${hariIndo[end.getDay()]}, ${end.getDate()} ${getMonthName(end)}`
+            };
+        }
+
+        function getMonthName(date) {
+            const names = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            return names[date.getMonth()];
+        }
+
+        function addPiketIndividual() {
+            const hari = document.getElementById('piketHariSelect').value;
+            const nama = document.getElementById('piketNamaSelect').value;
+            if (!nama) return alert("Pilih nama pegawai terlebih dahulu!");
+
+            addChipUI(hari, nama);
+            document.getElementById('piketNamaSelect').value = "";
+        }
+
+        function addChipUI(hari, nama) {
+            const containerId = `chips${hari}`;
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            // Cek duplikat
+            const existing = Array.from(container.querySelectorAll('.chip span')).map(s => s.textContent);
+            if (existing.includes(nama)) return;
+
+            const chip = document.createElement('div');
+            chip.className = 'chip';
+            chip.innerHTML = `<span>${nama}</span><i class="material-icons-round" onclick="this.parentElement.remove()">close</i>`;
+            container.appendChild(chip);
+        }
+
+        function savePiket() {
+            const piketData = {
+                Senin: getChipsData('Senin'),
+                Selasa: getChipsData('Selasa'),
+                Rabu: getChipsData('Rabu'),
+                Kamis: getChipsData('Kamis'),
+                Jumat: getChipsData('Jumat')
+            };
+
+            db.ref('pengaturan/piket').set(piketData)
+                .then(() => showToast("✅ Jadwal Piket Berhasil Diperbarui"))
+                .catch(e => alert("Gagal Simpan: " + e.message));
+        }
+
+        function getChipsData(hari) {
+            const container = document.getElementById(`chips${hari}`);
+            if (!container) return "";
+            return Array.from(container.querySelectorAll('.chip span')).map(s => s.textContent).join('\n');
+        }
 
         function toggleTheme() {
             const body = document.body;
@@ -3805,6 +4199,46 @@
             document.getElementById('statPengajian').innerText = countPengajian;
             document.getElementById('statXtra').innerText = countXtra;
             document.getElementById('statTotalUang').innerText = "Rp " + totalUangStat.toLocaleString();
+
+            // --- HITUNG PERSENTASE PERIODE (26-25) ---
+            const cycle = getAttendanceCycle();
+            const nHariEfektif = parseInt(masterSettings.hariEfektif) || 0;
+            const elPersen = document.getElementById('statPersentase');
+            const elLabel = document.getElementById('labelPeriode');
+
+            if (elPersen && nHariEfektif > 0) {
+                db.ref('database').once('value', snapEmp => {
+                    const employees = snapEmp.val() || {};
+                    const nPegawai = Object.values(employees).filter(e => e.status === 'Aktif').length;
+                    
+                    if (nPegawai > 0) {
+                        // Kita butuh data historical dalam rentang 26-25
+                        // Kita asumsikan cacheSekolah hanya berisi data hari ini (berdasarkan pendahulu)
+                        // Jadi kita harus fetch data historical atau menggunakan kalkulasi rekap
+                        db.ref('logs_presensi_sekolah').once('value', snapLogs => {
+                            const logs = snapLogs.val() || {};
+                            let totalUniquePresence = 0;
+                            
+                            Object.keys(logs).forEach(tgl => {
+                                if (tgl >= cycle.start && tgl <= cycle.end) {
+                                    const dayLogs = logs[tgl];
+                                    const namesSet = new Set(Object.values(dayLogs).map(l => l.nama));
+                                    totalUniquePresence += namesSet.size;
+                                }
+                            });
+
+                            const potentialTotal = nPegawai * nHariEfektif;
+                            const percentage = Math.round((totalUniquePresence / potentialTotal) * 100);
+                            elPersen.innerText = Math.min(100, percentage) + "%";
+                            elLabel.innerText = "Siklus 26 - 25";
+                            elLabel.title = cycle.label;
+                        });
+                    }
+                });
+            } else if (elPersen) {
+                elPersen.innerText = "N/A";
+                elLabel.innerText = "Atur Hari Efektif";
+            }
 
             tbody.innerHTML = "";
             if (allData.length === 0) {
