@@ -26,6 +26,7 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
     <style>
         :root {
@@ -588,6 +589,58 @@
             text-align: center;
         }
 
+        /* --- LOGIN PAGE STYLES (NEW) --- */
+        #loginSection {
+            max-width: 420px !important;
+            margin: 40px auto;
+            padding: 40px 30px !important;
+            background: var(--bg-card);
+            border-radius: 32px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+            animation: fadeIn 0.6s ease;
+        }
+
+        .login-header-text h2 {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.8px;
+            margin-bottom: 8px;
+        }
+
+        .login-header-text p {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 30px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            margin-bottom: 16px;
+            text-align: left;
+        }
+
+        .input-wrapper label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            margin-left: 4px;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 36px;
+            color: var(--text-muted);
+            font-size: 20px;
+        }
+
+        .input-wrapper .form-control {
+            padding-left: 44px;
+        }
+
         /* --- PWA INSTALL MODAL --- */
         #installModal {
             position: fixed;
@@ -945,39 +998,50 @@
 
     <main style="flex: 1;">
         <!-- LOGIN -->
-        <div id="loginSection" style="max-width: 400px; margin: 60px auto; padding: 0 24px; text-align: center;">
+        <div id="loginSection" class="animate-up">
             <div id="loginLogoContainer"
-                style="width: 84px; height: 84px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 40px; box-shadow: var(--shadow-md); overflow: hidden;">
-                <i class="material-icons-round" id="loginIcon" style="color: var(--primary);">school</i>
+                style="width: 90px; height: 90px; background: white; border-radius: 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 40px; box-shadow: 0 10px 25px rgba(79, 70, 229, 0.2); overflow: hidden; border: 1px solid var(--border);">
+                <i class="material-icons-round" style="color:var(--primary); font-size:44px;">school</i>
             </div>
-            <h2 style="margin-bottom: 8px; font-size: 24px; font-weight: 800;">Manajemen Sekolah</h2>
-            <p style="color: var(--text-muted); margin-bottom: 32px; font-size: 15px;">Silakan masukkan kode dan
-                password pegawai Anda.</p>
-            <div style="text-align: left; margin-bottom: 16px;">
-                <label
-                    style="display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">Kode
-                    Pegawai</label>
-                <input type="tel" id="inputKode" class="form-control" placeholder="Contoh: 1001" oninput="checkInput()"
-                    onkeydown="if(event.key==='Enter') document.getElementById('inputPassword').focus()">
+            
+            <div class="login-header-text">
+                <h2>Portal Pegawai</h2>
+                <p>Silakan masuk untuk mengakses fitur portal</p>
             </div>
-            <div style="text-align: left; margin-bottom: 20px;">
-                <label
-                    style="display: block; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 8px;">Password</label>
-                <div style="position: relative;">
-                    <input type="password" id="inputPassword" class="form-control"
-                        placeholder="Default: sama dengan kode" oninput="checkInput()"
-                        onkeydown="if(event.key==='Enter') cekKode()" style="padding-right: 44px;">
-                    <button onclick="togglePwdVisibility('inputPassword', 'eyeLogin')"
-                        style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:var(--text-muted);">
-                        <i class="material-icons-round" id="eyeLogin" style="font-size:20px;">visibility_off</i>
-                    </button>
-                </div>
-                <p style="font-size:11px; color:var(--text-muted); margin-top:6px;">💡 Jika belum pernah diubah,
-                    password sama dengan kode pegawai</p>
+
+            <div class="input-wrapper">
+                <label>Nomor / Kode Pegawai</label>
+                <i class="material-icons-round">person</i>
+                <input type="text" id="inputKode" class="form-control" placeholder="Masukkan Kode..."
+                    oninput="checkInput()" onkeydown="if(event.key==='Enter') document.getElementById('inputPassword').focus()">
             </div>
-            <button id="btnLogin" class="btn btn-primary" disabled onclick="cekKode()">
+
+            <div class="input-wrapper" style="position:relative;">
+                <label>Password</label>
+                <i class="material-icons-round">lock</i>
+                <input type="password" id="inputPassword" class="form-control" placeholder="Masukkan Password..."
+                    oninput="checkInput()" onkeypress="if(event.key==='Enter') cekKode()">
+                <button onclick="togglePwdVisibility('inputPassword', 'eyeLogin')" 
+                    style="position:absolute; right:12px; top:36px; background:none; border:none; cursor:pointer; color:var(--text-muted); padding:0;">
+                    <i class="material-icons-round" id="eyeLogin" style="font-size:20px;">visibility_off</i>
+                </button>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; padding:0 4px;">
+                <label class="checkbox-container">
+                    <input type="checkbox" id="rememberMe" checked>
+                    <span>Ingat Saya</span>
+                </label>
+            </div>
+
+            <button id="btnLogin" class="btn btn-primary" onclick="cekKode()" disabled>
                 Masuk Sekarang <i class="material-icons-round">arrow_forward</i>
             </button>
+
+            <div style="margin-top: 24px; font-size: 11px; color: var(--text-muted); font-weight: 500;">
+                <p>💡 Password default sama dengan kode pegawai</p>
+                <p style="margin-top:4px;">Lupa password? Hubungi Admin Sekolah</p>
+            </div>
         </div>
 
         <!-- DASHBOARD -->
@@ -1466,6 +1530,8 @@
         };
         if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+        const auth = firebase.auth();
+        auth.signInAnonymously().catch(e => console.error("Auth Error:", e));
 
         let currentUserData = null;
         let globalSettings = {};
@@ -1512,8 +1578,15 @@
                     return;
                 }
 
-                // Simpan sesi ke localStorage agar tidak login ulang saat refresh
-                localStorage.setItem('user_session', JSON.stringify({ kode, nama: data.nama, jabatan: data.jabatan || 'Pegawai' }));
+                // Simpan sesi: localStorage (jika Ingat Saya) atau sessionStorage
+                const remember = document.getElementById('rememberMe').checked;
+                const sessionData = JSON.stringify({ kode, nama: data.nama, jabatan: data.jabatan || 'Pegawai' });
+                
+                if (remember) {
+                    localStorage.setItem('user_session', sessionData);
+                } else {
+                    sessionStorage.setItem('user_session', sessionData);
+                }
 
                 loginDone({ ...data, kode }, kode);
             } catch (e) { showToast('Error: ' + e.message); btn.disabled = false; btn.innerHTML = 'Masuk Sekarang'; }
@@ -1525,25 +1598,43 @@
             document.getElementById('displayJabatan').innerText = data.jabatan || 'Pegawai';
             document.getElementById('akunNama').innerText = data.nama;
             document.getElementById('akunKode').innerText = 'Kode: ' + kode;
-            document.getElementById('loginSection').classList.add('hidden');
-            document.getElementById('dashboardWrapper').classList.remove('hidden');
-            document.getElementById('navMenu').classList.remove('hidden');
-            document.getElementById('logoutBtn').classList.remove('hidden');
+            
+            // Animasi transisi login
+            const gate = document.getElementById('loginSection');
+            gate.style.opacity = '0';
+            gate.style.transform = 'translateY(-20px)';
+            
+            setTimeout(() => {
+                gate.classList.add('hidden');
+                document.getElementById('dashboardWrapper').classList.remove('hidden');
+                document.getElementById('navMenu').classList.remove('hidden');
+                document.getElementById('logoutBtn').classList.remove('hidden');
+            }, 400);
+            
             initListeners(data.nama, kode);
         }
 
         // Auto-restore session saat refresh
         (async function restoreSession() {
-            const saved = localStorage.getItem('user_session');
+            const saved = localStorage.getItem('user_session') || sessionStorage.getItem('user_session');
             if (!saved) return;
             try {
                 const session = JSON.parse(saved);
                 if (!session.kode) return;
+                
+                // Tampilkan skeleton/loading state jika perlu
                 const snap = await db.ref('database/' + session.kode).once('value');
                 const data = snap.val();
-                if (!data) { localStorage.removeItem('user_session'); return; }
+                if (!data) { 
+                    localStorage.removeItem('user_session'); 
+                    sessionStorage.removeItem('user_session');
+                    return; 
+                }
                 loginDone({ ...data, kode: session.kode }, session.kode);
-            } catch (e) { localStorage.removeItem('user_session'); }
+            } catch (e) { 
+                localStorage.removeItem('user_session'); 
+                sessionStorage.removeItem('user_session');
+            }
         })();
 
         function initListeners(nama, kode) {
@@ -2129,7 +2220,9 @@
             localStorage.setItem('theme', currentTheme);
         }
         function logout() {
+            if (!confirm("Yakin ingin keluar dari Portal?")) return;
             localStorage.removeItem('user_session');
+            sessionStorage.removeItem('user_session');
             location.reload();
         }
 
