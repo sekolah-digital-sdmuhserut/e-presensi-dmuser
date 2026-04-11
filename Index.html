@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#020617">
+
+    <title>Diamond Pro Kiosk - SD Muhammadiyah Serut</title>
+    <base target="_top">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Roboto+Mono:wght@700&display=swap"
+        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        :root {
+            --emerald: #10b981;
+            --emerald-glow: rgba(16, 185, 129, 0.4);
+            --emerald-dark: #064e3b;
+            --amber: #f59e0b;
+            --crimson: #ef4444;
+            --bg-dark: #020617;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-strong: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --font-main: 'Outfit', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html,
+        body {
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: radial-gradient(circle at top, #064e3b 0%, var(--bg-dark) 100%);
+            color: #ffffff;
+            position: fixed;
+            touch-action: manipulation;
+        }
+
+        .app-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+        }
+
+        /* --- IMMERSIVE HEADER --- */
+        .header-section {
+            padding: 10px 20px 5px;
+            text-align: center;
+        }
+
+        .diamond-logo {
+            width: 54px;
+            height: 54px;
+            background: white;
+            border-radius: 14px;
+            margin: 0 auto 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px var(--emerald-glow);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .diamond-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .diamond-logo i {
+            font-size: 28px;
+            color: var(--emerald-dark);
+        }
+
+        .brand-subtitle {
+            font-size: 8px;
+            font-weight: 900;
+            color: var(--emerald);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
+        .brand-title {
+            font-size: 15px;
+            font-weight: 800;
+            letter-spacing: -0.2px;
+            opacity: 0.9;
+        }
+
+        /* Stats Pill */
+        .stats-dashboard {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--glass);
+            padding: 4px 12px;
+            border-radius: 100px;
+            border: 1px solid var(--glass-border);
+            padding: 2px 10px;
+            border-radius: 100px;
+            border: 1px solid var(--glass-border);
+            margin-top: 5px;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .stat-val {
+            color: var(--emerald);
+            font-weight: 900;
+            font-size: 14px;
+        }
+
+        /* --- CLOCK --- */
+        .clock-display {
+            margin: 5px 0;
+            text-align: center;
+        }
+
+        #dateLabel {
+            font-size: 11px;
+            color: #cbd5e1;
+            font-weight: 600;
+            margin-bottom: 0px;
+        }
+
+        #timeLabel {
+            font-size: 34px;
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: white;
+            line-height: 1;
+        }
+
+        /* --- MAIN GLASS CARD --- */
+        .main-card {
+            flex: 1;
+            margin: 0 15px 15px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 35px;
+            backdrop-filter: blur(25px);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        .entry-group {
+            max-width: 300px;
+            margin: 0 auto 12px;
+            width: 100%;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: 900;
+            background: var(--glass-strong);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--emerald);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 25px var(--emerald-glow);
+            transform: scale(1.02);
+        }
+
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+
+        /* Action Tiles 2x2 */
+        .action-tiles {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-shrink: 0;
+        }
+
+        .tile {
+            position: relative;
+            border: none;
+            border-radius: 18px;
+            padding: 12px 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: white;
+            font-weight: 800;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+            background: var(--glass-strong);
+            border: 1px solid var(--glass-border);
+        }
+
+        .tile i {
+            font-size: 24px;
+            transition: transform 0.2s;
+        }
+
+        /* Premium Tile Styles */
+        .tile-datang {
+            --color: #3b82f6;
+        }
+
+        .tile-pulang {
+            --color: var(--amber);
+        }
+
+        .tile-pengajian {
+            --color: var(--emerald);
+        }
+
+        .tile-xtra {
+            --color: #8b5cf6;
+        }
+
+        .tile:active {
+            transform: scale(0.92);
+            filter: brightness(1.2);
+        }
+
+        .tile::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, var(--color), transparent 70%);
+            opacity: 0.15;
+            transition: opacity 0.3s;
+        }
+
+        .tile i {
+            color: var(--color);
+            filter: drop-shadow(0 0 8px var(--color));
+        }
+
+        /* --- LIVE ACTIVITY FEED --- */
+        .feed-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            margin-top: 10px;
+            padding-top: 15px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding: 0 5px;
+            opacity: 0.6;
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 2px;
+        }
+
+        .feed-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding-bottom: 20px;
+        }
+
+        .activity-card {
+            background: var(--glass-strong);
+            border: 1px solid var(--glass-border);
+            padding: 12px 14px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.4s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .act-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .act-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .act-name {
+            font-size: 14px;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-bottom: 2px;
+        }
+
+        .act-meta {
+            font-size: 10px;
+            font-weight: 700;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .act-tag {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .act-time {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--emerald);
+        }
+
+        /* --- OVERLAYS --- */
+        #statusOverlay {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(30px);
+            background: rgba(2, 6, 23, 0.85);
+        }
+
+        .status-box {
+            text-align: center;
+            width: 85%;
+            max-width: 320px;
+            animation: popUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .status-icon {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 25px;
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 70px;
+            box-shadow: 0 0 50px var(--glow);
+            border: 2px solid var(--glow);
+            color: var(--glow);
+        }
+
+        .status-title {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .status-msg {
+            font-size: 16px;
+            font-weight: 600;
+            opacity: 0.7;
+            line-height: 1.4;
+        }
+
+        @keyframes popUp {
+            from {
+                transform: scale(0.4);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal-glass {
+            position: fixed;
+            inset: 0;
+            z-index: 50000;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-body {
+            background: #0f172a;
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 25px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        ::-webkit-scrollbar {
+            width: 0px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- DIAMOND SPLASH -->
+    <div id="splashScreen"
+        style="position: fixed; inset:0; background:var(--bg-dark); z-index:999999; display:flex; flex-direction:column; align-items:center; justify-content:center; transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);">
+        <div class="diamond-logo" style="width:120px; height:120px; box-shadow: 0 0 60px rgba(16, 185, 129, 0.3);">
+            <i class="material-icons-round" style="font-size:60px;">school</i>
+        </div>
+        <div style="margin-top: 30px; font-weight: 900; letter-spacing: 5px; font-size: 14px; color: var(--emerald);">
+            UNIFYING...</div>
+    </div>
+
+    <div class="app-wrapper">
+        <header class="header-section">
+            <div class="diamond-logo" id="mainLogoBox">
+                <i class="material-icons-round">school</i>
+                <img id="logoImg" style="display:none;">
+            </div>
+            <div class="brand-subtitle">SD MUHAMMADIYAH SERUT</div>
+            <h1 class="brand-title">DIAMOND UNIFIED PRO</h1>
+
+            <div class="stats-dashboard">
+                <div class="stat-item">
+                    <i class="material-icons-round" style="font-size:16px;">groups</i>
+                    HADIR: <span class="stat-val" id="statHadir">0</span>
+                </div>
+                <div class="stat-item">
+                    <i class="material-icons-round" style="font-size:16px; color:var(--amber);">logout</i>
+                    PULANG: <span class="stat-val" style="color:var(--amber);" id="statPulang">0</span>
+                </div>
+            </div>
+        </header>
+
+        <section class="main-card">
+            <div class="clock-display">
+                <div id="dateLabel">...</div>
+                <div id="timeLabel">00:00:00</div>
+            </div>
+
+            <div class="entry-group">
+                <input type="text" id="inputNip" placeholder="KETUK / KODE PIN" autocomplete="off" inputmode="numeric">
+            </div>
+
+            <div class="action-tiles">
+                <button class="tile tile-datang" onclick="prosesPresensiManual('datang')">
+                    <i class="material-icons-round">login</i> DATANG
+                </button>
+                <button class="tile tile-pulang" onclick="prosesPresensiManual('pulang')">
+                    <i class="material-icons-round">logout</i> PULANG
+                </button>
+                <button class="tile tile-pengajian" onclick="presensi('pengajian')">
+                    <i class="material-icons-round">menu_book</i> MENGAJI
+                </button>
+                <button class="tile tile-xtra" onclick="presensi('ekstrakurikuler')">
+                    <i class="material-icons-round">sports_soccer</i> EKSTRA
+                </button>
+            </div>
+
+            <div class="feed-section">
+                <div class="feed-header">
+                    <span>RIWAYAT PRESENSI HARI INI</span>
+                    <span>10 TERBARU</span>
+                </div>
+                <div class="feed-list" id="activityFeed">
+                    <div style="text-align:center; padding:40px; opacity:0.3; font-size:12px;">MENUNGGU AKTIVITAS...
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div style="text-align:center; padding-bottom:15px; opacity:0.3;">
+            <a href="?mode=admin" style="font-size:10px; color:white; text-decoration:none; font-weight:700;">DIAMOND
+                ADMIN PANEL</a>
+        </div>
+    </div>
+
+    <!-- FEEDBACK OVERLAY -->
+    <div id="statusOverlay">
+        <div class="status-box" id="statusBox">
+            <div class="status-icon" id="statusIcon"></div>
+            <h2 class="status-title" id="statusTitle">...</h2>
+            <div class="status-msg" id="statusMsg">...</div>
+        </div>
+    </div>
+
+    <!-- XTRA MODAL -->
+    <div id="xtraModal" class="modal-glass">
+        <div class="modal-body">
+            <h3 style="margin-bottom:20px; font-weight:800; font-size:18px;">Pilih Kegiatan Ekstra</h3>
+            <div id="xtraList" style="display:flex; flex-direction:column; gap:10px;"></div>
+            <button onclick="closeXtraModal()"
+                style="margin-top:20px; background:transparent; color:#94a3b8; border:none; font-weight:700; cursor:pointer;">BATALKAN</button>
+        </div>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBAimpQP9bmvM88oOc3-P5ezbv94n7e1gE",
+            authDomain: "manajemen-sekolah-7225b.firebaseapp.com",
+            databaseURL: "https://manajemen-sekolah-7225b-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "manajemen-sekolah-7225b",
+            storageBucket: "manajemen-sekolah-7225b.appspot.com",
+            messagingSenderId: "10101010101",
+            appId: "1:10101010101:web:10101010101"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const SECRET_TOKEN = "SD_SERUT_RAHASIA_2024";
+        let xtraListCache = [];
+
+        function getLocalDateISO() {
+            const now = new Date();
+            return now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, '0') + "-" + String(now.getDate()).padStart(2, '0');
+        }
+        function getLocalTime() {
+            const now = new Date();
+            return String(now.getHours()).padStart(2, '0') + ":" + String(now.getMinutes()).padStart(2, '0') + ":" + String(now.getSeconds()).padStart(2, '0');
+        }
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('timeLabel').innerText = getLocalTime();
+            document.getElementById('dateLabel').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        }
+        setInterval(updateClock, 1000); updateClock();
+
+        function showStatus(type, title, msg) {
+            const overlay = document.getElementById('statusOverlay');
+            const box = document.getElementById('statusBox');
+            const icon = document.getElementById('statusIcon');
+            const glow = type === 'sukses' ? '#10b981' : '#ef4444';
+
+            box.style.setProperty('--glow', glow);
+            icon.innerHTML = `<i class="material-icons-round">${type === 'sukses' ? 'check_circle' : 'error'}</i>`;
+            document.getElementById('statusTitle').innerText = title;
+            document.getElementById('statusMsg').innerText = msg;
+
+            overlay.style.display = 'flex';
+            setTimeout(() => { overlay.style.display = 'none'; }, 900);
+        }
+
+        function prosesPresensiManual(mode) {
+            const kode = document.getElementById('inputNip').value.trim();
+            if (!kode) { showStatus('gagal', 'MASUKKAN KODE', 'PIN TIDAK BOLEH KOSONG'); return; }
+            db.ref('database/' + kode).once('value', (snap) => {
+                const u = snap.val();
+                if (!u) { showStatus('gagal', 'TIDAK TERDAFTAR', 'KODE ANDA TIDAK DIKENALI'); return; }
+                const today = getLocalDateISO();
+                const path = 'logs_presensi_sekolah/' + today + '/' + kode;
+                const time = getLocalTime();
+                db.ref(path).once('value', (log) => {
+                    const ex = log.val();
+                    if (mode === 'pulang') {
+                        if (!ex || !ex.jamDatang) { showStatus('gagal', 'BELUM HADIR', 'ANDA BELUM ABSEN DATANG'); return; }
+                        if (ex.jamPulang) { showStatus('sukses', 'SUDAH PULANG', 'SAYONARA, ' + u.nama); return; }
+                        db.ref(path).update({ jamPulang: time, timestamp: Date.now() }).then(() => {
+                            showStatus('sukses', 'SAYONARA!', u.nama + ', HATI-HATI DI JALAN'); document.getElementById('inputNip').value = "";
+                        });
+                    } else {
+                        if (ex) { showStatus('sukses', 'SUDAH HADIR', 'SELAMAT BELAJAR, ' + u.nama); return; }
+                        db.ref(path).set({ tanggal: today, kode: kode, nama: u.nama, jamDatang: time, jamPulang: "", timestamp: Date.now(), keterangan: "Sekolah", token: SECRET_TOKEN }).then(() => {
+                            showStatus('sukses', 'BERHASIL DATANG', 'SELAMAT BELAJAR, ' + u.nama); document.getElementById('inputNip').value = "";
+                        });
+                    }
+                });
+            });
+        }
+
+        function presensi(type) {
+            const kode = document.getElementById('inputNip').value.trim();
+            if (!kode) { showStatus('gagal', 'MASUKKAN KODE', 'PIN TIDAK BOLEH KOSONG'); return; }
+            db.ref('database/' + kode).once('value', (snap) => {
+                if (!snap.val()) { showStatus('gagal', 'KODE SALAH', 'TIDAK TERDAFTAR'); return; }
+                if (type === 'ekstrakurikuler') { openXtraModal(); return; }
+                const today = getLocalDateISO();
+                const path = 'logs_' + type + '/' + today + '/' + kode;
+                db.ref(path).once('value', (log) => {
+                    if (log.val()) { showStatus('sukses', 'SUDAH ABSEN', 'TERIMA KASIH'); return; }
+                    db.ref(path).set({ tanggal: today, kode: kode, nama: snap.val().nama, jamDatang: getLocalTime(), timestamp: Date.now(), keterangan: type.toUpperCase(), token: SECRET_TOKEN }).then(() => {
+                        showStatus('sukses', 'BERHASIL', type.toUpperCase() + ' TELAH DICATAT'); document.getElementById('inputNip').value = "";
+                    });
+                });
+            });
+        }
+
+        function openXtraModal() {
+            const c = document.getElementById('xtraList'); c.innerHTML = "";
+            const l = Array.isArray(xtraListCache) ? xtraListCache : Object.values(xtraListCache || {});
+            l.forEach(i => {
+                const b = document.createElement('button'); b.className = "tile"; b.style.width = "100%"; b.innerText = i.nama;
+                b.onclick = () => { closeXtraModal(); sendExtra(i.nama); };
+                c.appendChild(b);
+            });
+            document.getElementById('xtraModal').style.display = "flex";
+        }
+        function closeXtraModal() { document.getElementById('xtraModal').style.display = "none"; }
+        function sendExtra(n) {
+            const k = document.getElementById('inputNip').value.trim();
+            const d = getLocalDateISO();
+            const p = 'logs_ekstrakurikuler/' + d + '/' + k + "_" + n.replace(/\s/g, "_");
+            db.ref('database/' + k).once('value', (snap) => {
+                db.ref(p).set({ tanggal: d, kode: k, nama: snap.val().nama, jamDatang: getLocalTime(), timestamp: Date.now(), keterangan: n, token: SECRET_TOKEN }).then(() => {
+                    showStatus('sukses', 'BERHASIL', n + ' TELAH DICATAT'); document.getElementById('inputNip').value = "";
+                });
+            });
+        }
+
+        let cacheS = {}; let cacheP = {}; let cacheE = {};
+        function startSync() {
+            const today = getLocalDateISO();
+            db.ref('pengaturan/logoUrl').on('value', (s) => {
+                if (s.val()) { document.getElementById('logoImg').src = s.val(); document.getElementById('logoImg').style.display = 'block'; document.querySelector('#mainLogoBox i').style.display = 'none'; }
+            });
+            db.ref('pengaturan/xtraList').on('value', (s) => { xtraListCache = s.val() || []; });
+            db.ref('logs_presensi_sekolah/' + today).on('value', (s) => { cacheS = s.val() || {}; renderFeed(); });
+            db.ref('logs_pengajian/' + today).on('value', (s) => { cacheP = s.val() || {}; renderFeed(); });
+            db.ref('logs_ekstrakurikuler/' + today).on('value', (s) => { cacheE = s.val() || {}; renderFeed(); });
+        }
+
+        function renderFeed() {
+            const feed = document.getElementById('activityFeed');
+            let all = [];
+            const toArr = (o) => { let a = []; for (let k in o) { if (!k.startsWith('_')) a.push(o[k]); } return a; };
+            all = all.concat(toArr(cacheS), toArr(cacheP), toArr(cacheE));
+            all.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+            let hSet = new Set(); let pCount = 0;
+            all.forEach(r => { hSet.add(r.nama); if (r.jamPulang) pCount++; });
+            document.getElementById('statHadir').innerText = hSet.size;
+            document.getElementById('statPulang').innerText = pCount;
+
+            const top10 = all.slice(0, 10);
+            if (all.length === 0) { feed.innerHTML = '<div style="text-align:center; padding:40px; opacity:0.3; font-size:12px;">BELUM ADA AKTIVITAS...</div>'; return; }
+
+            feed.innerHTML = top10.map(r => {
+                const isP = !!r.jamPulang;
+                const time = (isP ? r.jamPulang : r.jamDatang).substring(0, 5);
+                const tag = isP ? 'PULANG' : (r.keterangan || 'HADIR');
+                let color = isP ? 'var(--amber)' : (tag === 'Sekolah' ? '#3b82f6' : (tag.includes('PENGAJIAN') ? 'var(--emerald)' : '#8b5cf6'));
+                let ico = isP ? 'logout' : (tag === 'Sekolah' ? 'login' : (tag.includes('PENGAJIAN') ? 'auto_stories' : 'fitness_center'));
+
+                return `
+                    <div class="activity-card">
+                        <div class="act-icon" style="color:${color};"><i class="material-icons-round">${ico}</i></div>
+                        <div class="act-info">
+                            <div class="act-name">${r.nama}</div>
+                            <div class="act-meta"><span class="act-tag">${tag}</span> • TERCATAT</div>
+                        </div>
+                        <div class="act-time">${time}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        db.ref('.info/connected').on('value', (s) => {
+            if (s.val()) {
+                startSync();
+                setTimeout(() => { document.getElementById('splashScreen').style.opacity = '0'; setTimeout(() => document.getElementById('splashScreen').style.display = 'none', 600); }, 500);
+            }
+        });
+    </script>
+</body>
+
+</html>
