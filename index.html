@@ -19,6 +19,7 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
 
     <style>
         :root {
@@ -576,6 +577,8 @@
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
+        const auth = firebase.auth();
+        auth.signInAnonymously().catch(e => console.error("Auth Error:", e));
         const SECRET_TOKEN = "SD_SERUT_RAHASIA_2024";
         let xtraListCache = [];
 
