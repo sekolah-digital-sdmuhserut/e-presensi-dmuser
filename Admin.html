@@ -63,6 +63,87 @@
             --glass-border: rgba(30, 41, 59, 0.5);
         }
 
+        /* --- LOGIN GATE STYLES --- */
+        #loginGate {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at top right, var(--accent), var(--bg-app));
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(20px);
+        }
+
+        .login-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 40px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .login-logo {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 20px;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(79, 70, 229, 0.3);
+        }
+
+        .login-logo i {
+            font-size: 40px;
+            color: var(--accent);
+        }
+
+        .pin-input-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .pin-field {
+            width: 100%;
+            padding: 16px;
+            border-radius: 12px;
+            border: 2px solid var(--border);
+            background: var(--bg-surface);
+            font-size: 24px;
+            font-weight: 800;
+            text-align: center;
+            letter-spacing: 12px;
+            color: var(--accent);
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .pin-field:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-light);
+        }
+
+        /* Hiding main content before login */
+        body:not(.access-granted) .sidebar,
+        body:not(.access-granted) .main-wrapper {
+            display: none !important;
+        }
+
+        body.access-granted #loginGate {
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.5s ease;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -1208,6 +1289,24 @@
 
 <body>
 
+    <!-- LOGIN GATE OVERLAY -->
+    <div id="loginGate">
+        <div class="login-card">
+            <div class="login-logo">
+                <i class="material-icons-round">security</i>
+            </div>
+            <h2 style="font-weight:800; letter-spacing:-0.5px; margin-bottom:8px;">Admin Login</h2>
+            <p style="color:var(--text-secondary); font-size:12px;">Masukkan Kode Akses Anda</p>
+            
+            <input type="password" id="adminPin" class="pin-field" placeholder="••••" maxlength="8" onkeyup="if(event.key==='Enter') verifyAdminLogin()">
+            
+            <button class="btn btn-primary" onclick="verifyAdminLogin()" style="width:100%; padding:14px; border-radius:12px; font-size:14px; margin-top:10px;">
+                Buka Dashboard
+            </button>
+            <p id="loginError" style="color:var(--danger); font-size:11px; margin-top:15px; font-weight:600; min-height:16px;"></p>
+        </div>
+    </div>
+
     <nav class="sidebar">
         <div class="sidebar-header">
             <div class="brand-icon" id="sidebarLogo">
@@ -1257,7 +1356,12 @@
 
     <div class="main-wrapper">
         <header>
-            <div style="font-weight: 600; color: var(--text-secondary);">Sistem Manajemen Sekolah</div>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div style="font-weight: 600; color: var(--text-secondary);">Sistem Manajemen Sekolah</div>
+                <button class="btn btn-sm btn-outline" onclick="logoutAdmin()" title="Keluar">
+                    <i class="material-icons-round" style="font-size:16px;">logout</i> Keluar
+                </button>
+            </div>
             <div class="header-actions">
 
                 <!-- AUTO ACC TOGGLE -->
@@ -2211,6 +2315,51 @@
 
 
     <script>
+        // ==========================================
+        // SECURITY & LOGIN GATE
+        // ==========================================
+        const ADMIN_PIN_MASTER = "1234"; // PIN DEFAULT
+
+        function verifyAdminLogin() {
+            const input = document.getElementById('adminPin').value;
+            const error = document.getElementById('loginError');
+            
+            if (input === ADMIN_PIN_MASTER) {
+                grantAccess();
+            } else {
+                error.innerText = "❌ Kode Akses Salah!";
+                document.getElementById('adminPin').value = "";
+                document.getElementById('adminPin').focus();
+            }
+        }
+
+        function grantAccess() {
+            localStorage.setItem('admin_access_session', 'active');
+            document.body.classList.add('access-granted');
+            setTimeout(() => {
+                const gate = document.getElementById('loginGate');
+                if (gate) gate.style.display = 'none';
+            }, 500);
+            showToast("✅ Login Berhasil. Selamat Datang Admin!");
+        }
+
+        function logoutAdmin() {
+            if (!confirm("Yakin ingin keluar dari Dashboard?")) return;
+            localStorage.removeItem('admin_access_session');
+            window.location.reload();
+        }
+
+        // Jalankan saat load pertama kali
+        (function checkInitialAccess() {
+            if (localStorage.getItem('admin_access_session') === 'active') {
+                document.body.classList.add('access-granted');
+                // Sembunyikan gate segera tanpa animasi
+                const style = document.createElement('style');
+                style.innerHTML = '#loginGate { display: none !important; }';
+                document.head.appendChild(style);
+            }
+        })();
+
         // ==========================================
         // KONFIGURASI FIREBASE & STATE GLOBAL
         // ==========================================
@@ -4972,4 +5121,3 @@
 </body>
 
 </html>
-
