@@ -315,11 +315,11 @@
         .activity-card {
             background: var(--glass-strong);
             border: 1px solid var(--glass-border);
-            padding: 12px 14px;
-            border-radius: 18px;
+            padding: 8px 10px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             animation: slideIn 0.4s ease-out;
         }
 
@@ -336,13 +336,13 @@
         }
 
         .act-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 14px;
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 16px;
             background: rgba(0, 0, 0, 0.2);
         }
 
@@ -352,7 +352,7 @@
         }
 
         .act-name {
-            font-size: 14px;
+            font-size: 11px;
             font-weight: 700;
             white-space: nowrap;
             overflow: hidden;
@@ -373,13 +373,13 @@
             background: rgba(255, 255, 255, 0.05);
             padding: 1px 6px;
             border-radius: 4px;
-            font-size: 9px;
+            font-size: 8px;
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .act-time {
             font-family: 'Roboto Mono', monospace;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 800;
             color: var(--emerald);
         }
@@ -628,12 +628,12 @@
                         if (ex.jamPulang) { showStatus('sukses', 'SUDAH PULANG', 'SAYONARA, ' + u.nama); return; }
                         db.ref(path).update({ jamPulang: time, timestamp: Date.now() }).then(() => {
                             showStatus('sukses', 'SAYONARA!', u.nama + ', HATI-HATI DI JALAN'); document.getElementById('inputNip').value = "";
-                        });
+                        }).catch(e => showStatus('gagal', 'AKSES DITOLAK', 'Gagal: ' + e.message));
                     } else {
                         if (ex) { showStatus('sukses', 'SUDAH HADIR', 'SELAMAT BELAJAR, ' + u.nama); return; }
                         db.ref(path).set({ tanggal: today, kode: kode, nama: u.nama, jamDatang: time, jamPulang: "", timestamp: Date.now(), keterangan: "Sekolah", token: SECRET_TOKEN }).then(() => {
                             showStatus('sukses', 'BERHASIL DATANG', 'SELAMAT BELAJAR, ' + u.nama); document.getElementById('inputNip').value = "";
-                        });
+                        }).catch(e => showStatus('gagal', 'AKSES DITOLAK', 'Gagal: ' + e.message));
                     }
                 });
             });
@@ -643,24 +643,36 @@
             const kode = document.getElementById('inputNip').value.trim();
             if (!kode) { showStatus('gagal', 'MASUKKAN KODE', 'PIN TIDAK BOLEH KOSONG'); return; }
             db.ref('database/' + kode).once('value', (snap) => {
-                if (!snap.val()) { showStatus('gagal', 'KODE SALAH', 'TIDAK TERDAFTAR'); return; }
-                if (type === 'ekstrakurikuler') { openXtraModal(); return; }
+                const userData = snap.val();
+                if (!userData) { showStatus('gagal', 'KODE SALAH', 'TIDAK TERDAFTAR'); return; }
+                if (type === 'ekstrakurikuler') { openXtraModal(userData.nama); return; }
                 const today = getLocalDateISO();
                 const path = 'logs_' + type + '/' + today + '/' + kode;
                 db.ref(path).once('value', (log) => {
                     if (log.val()) { showStatus('sukses', 'SUDAH ABSEN', 'TERIMA KASIH'); return; }
                     db.ref(path).set({ tanggal: today, kode: kode, nama: snap.val().nama, jamDatang: getLocalTime(), timestamp: Date.now(), keterangan: type.toUpperCase(), token: SECRET_TOKEN }).then(() => {
                         showStatus('sukses', 'BERHASIL', type.toUpperCase() + ' TELAH DICATAT'); document.getElementById('inputNip').value = "";
-                    });
+                    }).catch(e => showStatus('gagal', 'AKSES DITOLAK', 'Gagal: ' + e.message));
                 });
             });
         }
 
-        function openXtraModal() {
+        function openXtraModal(userName) {
             const c = document.getElementById('xtraList'); c.innerHTML = "";
             const l = Array.isArray(xtraListCache) ? xtraListCache : Object.values(xtraListCache || {});
-            l.forEach(i => {
-                const b = document.createElement('button'); b.className = "tile"; b.style.width = "100%"; b.innerText = i.nama;
+            
+            let allowedExtras = l.filter(i => {
+                if (!i.pendamping) return false;
+                return i.pendamping.toLowerCase().includes(userName.toLowerCase());
+            });
+
+            if (allowedExtras.length === 0) {
+                showStatus('gagal', 'AKSES DITOLAK', 'ANDA TIDAK TERDAFTAR DI EKSTRAKURIKULER MANAPUN');
+                return;
+            }
+
+            allowedExtras.forEach(i => {
+                const b = document.createElement('button'); b.className = "tile tile-xtra"; b.style.width = "100%"; b.innerText = i.nama;
                 b.onclick = () => { closeXtraModal(); sendExtra(i.nama); };
                 c.appendChild(b);
             });
@@ -674,7 +686,7 @@
             db.ref('database/' + k).once('value', (snap) => {
                 db.ref(p).set({ tanggal: d, kode: k, nama: snap.val().nama, jamDatang: getLocalTime(), timestamp: Date.now(), keterangan: n, token: SECRET_TOKEN }).then(() => {
                     showStatus('sukses', 'BERHASIL', n + ' TELAH DICATAT'); document.getElementById('inputNip').value = "";
-                });
+                }).catch(e => showStatus('gagal', 'AKSES DITOLAK', 'Gagal: ' + e.message));
             });
         }
 
@@ -725,11 +737,24 @@
             }).join('');
         }
 
-        db.ref('.info/connected').on('value', (s) => {
-            if (s.val()) {
+        let isConnected = false;
+        let isAuthDone = false;
+        let hasUnlocked = false;
+
+        function tryUnlockScreen() {
+            if (isConnected && isAuthDone && !hasUnlocked) {
+                hasUnlocked = true;
                 startSync();
                 setTimeout(() => { document.getElementById('splashScreen').style.opacity = '0'; setTimeout(() => document.getElementById('splashScreen').style.display = 'none', 600); }, 500);
             }
+        }
+
+        db.ref('.info/connected').on('value', (s) => {
+            if (s.val()) { isConnected = true; tryUnlockScreen(); }
+        });
+
+        auth.onAuthStateChanged(user => {
+            if (user) { isAuthDone = true; tryUnlockScreen(); }
         });
     </script>
 </body>
