@@ -1480,33 +1480,83 @@
         }
 
         @media (max-width: 768px) {
-            .stat-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
+            /* ================================================
+               MOBILE: Sama seperti desktop, hanya diperkecil
+               ================================================ */
+
+            /* Font dasar lebih kecil */
+            body {
+                font-size: 11px;
             }
 
+            /* Header lebih compact */
             header {
-                padding: 0 15px;
+                padding: 0 10px;
             }
 
             .header-actions {
-                gap: 6px;
+                gap: 5px;
             }
 
             .date-text {
                 display: none;
             }
 
+            .live-time {
+                font-size: 11px;
+                min-width: 52px;
+            }
+
+            .datetime-container {
+                padding: 4px 8px;
+                gap: 5px;
+                font-size: 10px;
+            }
+
+            /* Content area lebih compact */
             .content-area {
+                padding: 10px;
+            }
+
+            /* Card lebih compact */
+            .card {
                 padding: 12px;
             }
 
-            .btn-sm-mobile {
-                padding: 8px !important;
-                font-size: 11px !important;
+            .card-title {
+                font-size: 13px;
             }
 
-            /* Make tables scrollable */
+            /* Stat grid dan stat cards diperkecil */
+            .stat-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .stat-card {
+                padding: 10px 12px;
+            }
+
+            .stat-value {
+                font-size: 18px;
+            }
+
+            .stat-label {
+                font-size: 9px;
+            }
+
+            /* Tombol diperkecil */
+            .btn {
+                font-size: 11px;
+                padding: 5px 10px;
+            }
+
+            .btn-sm {
+                font-size: 10px;
+                padding: 3px 7px;
+            }
+
+            /* Tabel diperkecil + scroll horizontal */
             .table-responsive,
             .table-wrapper {
                 width: 100%;
@@ -1514,49 +1564,110 @@
                 -webkit-overflow-scrolling: touch;
             }
 
-            /* Aturan auto-acc label sembunyikan di mobile */
-            .auto-acc-label {
-                display: none;
+            table {
+                font-size: 11px;
             }
 
-            /* Card header actions scroll horizontal */
-            .card-header-actions {
-                overflow-x: auto;
-                padding-bottom: 4px;
+            th, td {
+                padding: 5px 7px;
+                font-size: 11px;
             }
 
-            /* Dynamic rows jadi 2 kolom */
+            /* Sidebar nav items diperkecil */
+            .nav-item {
+                font-size: 11px;
+                padding: 10px 14px;
+                gap: 8px;
+            }
+
+            .nav-item i {
+                font-size: 18px;
+            }
+
+            /* Input diperkecil */
+            .input-group-control, input, select, textarea {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+
+            /* Settings group card */
+            .settings-group-card {
+                padding: 14px;
+            }
+
+            .settings-group-title {
+                font-size: 13px;
+            }
+
+            /* Dynamic row 2 kolom */
             .dynamic-row {
                 grid-template-columns: 1fr 1fr;
+            }
+
+            /* Auto-acc label lebih compact */
+            .auto-acc-label {
+                font-size: 10px;
+            }
+
+            /* Notif dropdown lebih compact */
+            .notif-item {
+                font-size: 11px;
+            }
+
+            /* Card header actions scroll kalau overflow */
+            .card-header-actions {
+                overflow-x: auto;
+                padding-bottom: 2px;
             }
         }
 
         @media (max-width: 480px) {
+            /* Layar sangat kecil: diperkecil lagi */
+            body {
+                font-size: 10px;
+            }
+
             .stat-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
             }
 
             .brand-text h1 {
-                font-size: 14px;
+                font-size: 12px;
             }
 
             .brand-text p {
                 font-size: 9px;
             }
 
-            .datetime-container {
-                padding: 4px 8px;
-                gap: 6px;
+            .stat-value {
+                font-size: 16px;
             }
 
-            .live-time {
-                font-size: 11px;
-                min-width: 50px;
+            .content-area {
+                padding: 8px;
             }
 
-            /* Compact header for very small screens */
-            .auto-acc-wrapper {
+            .card {
+                padding: 10px;
+            }
+
+            table {
+                font-size: 10px;
+            }
+
+            th, td {
+                padding: 4px 6px;
+            }
+
+            .btn {
+                font-size: 10px;
                 padding: 4px 8px;
+            }
+
+            .btn-sm {
+                font-size: 9px;
+                padding: 3px 6px;
             }
 
             /* Compact filter buttons */
