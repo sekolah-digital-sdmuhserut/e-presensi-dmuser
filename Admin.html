@@ -1149,12 +1149,14 @@
             .settings-container {
                 flex-direction: column;
             }
+
             .settings-sidebar {
                 width: 100%;
                 overflow-x: auto;
                 flex-direction: row;
                 padding-bottom: 10px;
             }
+
             .settings-nav-v {
                 display: flex;
                 flex-direction: row;
@@ -1163,41 +1165,52 @@
                 box-shadow: none;
                 padding: 0;
             }
+
             .settings-btn-v {
                 white-space: nowrap;
                 background: var(--bg-surface);
                 border: 1px solid var(--border);
             }
+
             .card-header {
                 flex-direction: column;
                 align-items: flex-start;
             }
+
             .card-header-actions {
                 width: 100%;
                 justify-content: flex-start;
             }
-            .card-header-actions > div {
+
+            .card-header-actions>div {
                 flex-wrap: wrap;
             }
+
             .search-wrapper {
                 width: 100%;
             }
+
             .search-input-mini {
                 width: 100%;
             }
+
             .btn {
                 font-size: 11px;
                 padding: 6px 10px;
             }
+
             .auto-acc-wrapper {
                 padding: 4px 8px;
             }
+
             .auto-acc-label {
                 display: none;
             }
+
             .datetime-container {
                 font-size: 11px;
             }
+
             .dynamic-row {
                 grid-template-columns: 1fr 1fr;
             }
@@ -1488,23 +1501,29 @@
             :root {
                 --sidebar-width: 260px;
             }
+
             .sidebar {
                 position: fixed;
                 left: calc(var(--sidebar-width) * -1);
                 transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             }
+
             body.sidebar-open .sidebar {
                 transform: translateX(var(--sidebar-width));
             }
+
             body.sidebar-open #sidebarOverlay {
                 display: block;
             }
+
             .main-wrapper {
                 margin-left: 0 !important;
             }
+
             header {
                 padding: 0 20px;
             }
+
             .mobile-toggle {
                 display: flex;
             }
@@ -1515,36 +1534,46 @@
                 grid-template-columns: repeat(2, 1fr);
                 gap: 12px;
             }
+
             header {
                 padding: 0 15px;
             }
+
             .header-actions {
                 gap: 6px;
             }
+
             .date-text {
                 display: none;
             }
+
             .content-area {
                 padding: 12px;
             }
+
             .btn-sm-mobile {
                 padding: 8px !important;
                 font-size: 11px !important;
             }
+
             /* Make tables scrollable manually */
-            .table-responsive, .table-wrapper {
+            .table-responsive,
+            .table-wrapper {
                 width: 100%;
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
             }
+
             /* Hide text labels inside header buttons on mobile */
             .btn .date-text {
                 display: none;
             }
+
             /* Stack card header actions on mobile */
             .card-header {
                 gap: 12px;
             }
+
             /* Compact rekap actions */
             .rekap-table-wide .card-header-actions {
                 overflow-x: auto;
@@ -1556,20 +1585,25 @@
             .stat-grid {
                 grid-template-columns: 1fr;
             }
+
             .brand-text h1 {
                 font-size: 14px;
             }
+
             .brand-text p {
                 font-size: 9px;
             }
+
             .datetime-container {
                 padding: 4px 8px;
                 gap: 6px;
             }
+
             .live-time {
                 font-size: 11px;
                 min-width: 50px;
             }
+
             /* Header overflow fix */
             header {
                 flex-wrap: wrap;
@@ -1577,23 +1611,28 @@
                 min-height: var(--header-height);
                 padding: 8px 12px;
             }
+
             .header-actions {
                 flex-wrap: nowrap;
                 overflow-x: auto;
                 max-width: 100%;
             }
+
             /* Settings buttons scroll horizontal */
             .settings-sidebar {
                 overflow-x: auto;
                 padding-bottom: 8px;
             }
+
             .settings-btn-v span {
                 display: none;
             }
+
             .settings-btn-v {
                 padding: 8px 10px;
                 justify-content: center;
             }
+
             /* Compact filter buttons */
             .dash-filter {
                 flex-wrap: wrap;
@@ -1617,13 +1656,16 @@
             </div>
             <h2 style="font-weight:800; letter-spacing:-0.5px; margin-bottom:8px;">Admin Login</h2>
             <p style="color:var(--text-secondary); font-size:12px;">Masukkan Kode Akses Anda</p>
-            
-            <input type="password" id="adminPin" class="pin-field" placeholder="••••" maxlength="8" onkeyup="if(event.key==='Enter') verifyAdminLogin()">
-            
-            <button class="btn btn-primary" onclick="verifyAdminLogin()" style="width:100%; padding:14px; border-radius:12px; font-size:14px; margin-top:10px;">
+
+            <input type="password" id="adminPin" class="pin-field" placeholder="••••" maxlength="8"
+                onkeyup="if(event.key==='Enter') verifyAdminLogin()">
+
+            <button class="btn btn-primary" onclick="verifyAdminLogin()"
+                style="width:100%; padding:14px; border-radius:12px; font-size:14px; margin-top:10px;">
                 Buka Dashboard
             </button>
-            <p id="loginError" style="color:var(--danger); font-size:11px; margin-top:15px; font-weight:600; min-height:16px;"></p>
+            <p id="loginError"
+                style="color:var(--danger); font-size:11px; margin-top:15px; font-weight:600; min-height:16px;"></p>
         </div>
     </div>
 
@@ -1680,9 +1722,11 @@
                 <button class="mobile-toggle" onclick="toggleSidebar()">
                     <i class="material-icons-round">menu</i>
                 </button>
-                <div style="font-weight: 600; color: var(--text-secondary);" class="date-text">Sistem Manajemen Sekolah</div>
+                <div style="font-weight: 600; color: var(--text-secondary);" class="date-text">Sistem Manajemen Sekolah
+                </div>
                 <button class="btn btn-sm btn-outline" onclick="logoutAdmin()" title="Keluar">
-                    <i class="material-icons-round" style="font-size:16px;">logout</i> <span class="date-text">Keluar</span>
+                    <i class="material-icons-round" style="font-size:16px;">logout</i> <span
+                        class="date-text">Keluar</span>
                 </button>
             </div>
             <div class="header-actions">
@@ -1775,7 +1819,8 @@
                         </div>
                     </div>
                     <!-- KARTU PERSENTASE PERIODE (BARU) -->
-                    <div class="stat-card" style="border-color: var(--accent); background: linear-gradient(135deg, var(--bg-surface), var(--accent-light));">
+                    <div class="stat-card"
+                        style="border-color: var(--accent); background: linear-gradient(135deg, var(--bg-surface), var(--accent-light));">
                         <div class="stat-icon" style="background: var(--accent); color: white;">
                             <i class="material-icons-round">analytics</i>
                         </div>
@@ -2070,8 +2115,10 @@
                             <!-- Search -->
                             <div class="search-wrapper">
                                 <button class="btn btn-outline btn-sm" onclick="openTrashModal()"
-                                    title="Lihat Data yang Dihapus" style="display:flex; align-items:center; gap:5px; margin-right:8px; border-color:var(--danger); color:var(--danger);">
-                                    <i class="material-icons-round" style="font-size:18px;">delete_sweep</i> Kotak Sampah
+                                    title="Lihat Data yang Dihapus"
+                                    style="display:flex; align-items:center; gap:5px; margin-right:8px; border-color:var(--danger); color:var(--danger);">
+                                    <i class="material-icons-round" style="font-size:18px;">delete_sweep</i> Kotak
+                                    Sampah
                                 </button>
                                 <i class="material-icons-round search-icon-mini">search</i>
                                 <input type="text" id="searchIzinInput" class="search-input-mini"
@@ -2127,8 +2174,10 @@
                             </div>
                             <div class="search-wrapper">
                                 <button class="btn btn-outline btn-sm" onclick="openTrashModal()"
-                                    title="Lihat Data yang Dihapus" style="display:flex; align-items:center; gap:5px; margin-right:8px; border-color:var(--danger); color:var(--danger);">
-                                    <i class="material-icons-round" style="font-size:18px;">delete_sweep</i> Kotak Sampah
+                                    title="Lihat Data yang Dihapus"
+                                    style="display:flex; align-items:center; gap:5px; margin-right:8px; border-color:var(--danger); color:var(--danger);">
+                                    <i class="material-icons-round" style="font-size:18px;">delete_sweep</i> Kotak
+                                    Sampah
                                 </button>
                                 <i class="material-icons-round search-icon-mini">search</i>
                                 <input type="text" id="searchLaporanInput" class="search-input-mini"
@@ -2239,7 +2288,8 @@
                                 <div class="settings-group-title">
                                     <i class="material-icons-round">history_toggle_off</i> Batas Waktu Kehadiran
                                     <span style="flex:1"></span>
-                                    <button class="reset-btn" onclick="resetToDefault('waktu')">Reset Ke Default</button>
+                                    <button class="reset-btn" onclick="resetToDefault('waktu')">Reset Ke
+                                        Default</button>
                                 </div>
                                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
                                     <div class="input-group">
@@ -2262,10 +2312,15 @@
                                         <label>Batas Jam Pulang</label>
                                         <input type="time" id="setBatasPulang">
                                     </div>
-                                    <div class="input-group" style="background:var(--accent-light); padding:10px; border-radius:12px; border:1px solid var(--accent);">
-                                        <label style="color:var(--accent); font-weight:800;">Hari Kerja Efektif (Periode Ini)</label>
-                                        <input type="number" id="setHariEfektif" placeholder="Misal: 22" style="background:white; border-color:var(--accent);">
-                                        <small style="font-size:10px; color:var(--text-secondary); margin-top:4px; display:block;">Digunakan untuk menghitung % kehadiran tiap periode.</small>
+                                    <div class="input-group"
+                                        style="background:var(--accent-light); padding:10px; border-radius:12px; border:1px solid var(--accent);">
+                                        <label style="color:var(--accent); font-weight:800;">Hari Kerja Efektif (Periode
+                                            Ini)</label>
+                                        <input type="number" id="setHariEfektif" placeholder="Misal: 22"
+                                            style="background:white; border-color:var(--accent);">
+                                        <small
+                                            style="font-size:10px; color:var(--text-secondary); margin-top:4px; display:block;">Digunakan
+                                            untuk menghitung % kehadiran tiap periode.</small>
                                     </div>
                                 </div>
                                 <div style="margin-top:20px; text-align:right;">
@@ -2280,9 +2335,11 @@
                                 <div class="settings-group-title">
                                     <i class="material-icons-round">engineering</i> Manajer Jadwal Piket
                                 </div>
-                                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:20px;">Pilih hari dan pegawai untuk ditambahkan ke jadwal harian.</p>
-                                
-                                <div style="display:grid; grid-template-columns: 1fr 2fr; gap:12px; align-items:flex-end; margin-bottom:20px; background:var(--bg-app); padding:16px; border-radius:12px;">
+                                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:20px;">Pilih hari
+                                    dan pegawai untuk ditambahkan ke jadwal harian.</p>
+
+                                <div
+                                    style="display:grid; grid-template-columns: 1fr 2fr; gap:12px; align-items:flex-end; margin-bottom:20px; background:var(--bg-app); padding:16px; border-radius:12px;">
                                     <div class="input-group" style="margin:0;">
                                         <label>Pilih Hari</label>
                                         <select id="piketHariSelect">
@@ -2300,30 +2357,37 @@
                                                 <option value="">-- Pilih Pegawai --</option>
                                             </select>
                                         </div>
-                                        <button class="btn btn-primary" onclick="addPiketIndividual()" style="width:auto; height:40px; margin-top:24px;">Tambah</button>
+                                        <button class="btn btn-primary" onclick="addPiketIndividual()"
+                                            style="width:auto; height:40px; margin-top:24px;">Tambah</button>
                                     </div>
                                 </div>
 
-                                <div id="piketChipsContainer" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
+                                <div id="piketChipsContainer"
+                                    style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
                                     <!-- Container untuk per hari : Senin s/d Jumat -->
                                     <div class="day-group">
-                                        <label style="font-size:11px; font-weight:800; color:var(--accent);">SENIN</label>
+                                        <label
+                                            style="font-size:11px; font-weight:800; color:var(--accent);">SENIN</label>
                                         <div id="chipsSenin" class="chip-container"></div>
                                     </div>
                                     <div class="day-group">
-                                        <label style="font-size:11px; font-weight:800; color:var(--accent);">SELASA</label>
+                                        <label
+                                            style="font-size:11px; font-weight:800; color:var(--accent);">SELASA</label>
                                         <div id="chipsSelasa" class="chip-container"></div>
                                     </div>
                                     <div class="day-group">
-                                        <label style="font-size:11px; font-weight:800; color:var(--accent);">RABU</label>
+                                        <label
+                                            style="font-size:11px; font-weight:800; color:var(--accent);">RABU</label>
                                         <div id="chipsRabu" class="chip-container"></div>
                                     </div>
                                     <div class="day-group">
-                                        <label style="font-size:11px; font-weight:800; color:var(--accent);">KAMIS</label>
+                                        <label
+                                            style="font-size:11px; font-weight:800; color:var(--accent);">KAMIS</label>
                                         <div id="chipsKamis" class="chip-container"></div>
                                     </div>
                                     <div class="day-group">
-                                        <label style="font-size:11px; font-weight:800; color:var(--accent);">JUMAT</label>
+                                        <label
+                                            style="font-size:11px; font-weight:800; color:var(--accent);">JUMAT</label>
                                         <div id="chipsJumat" class="chip-container"></div>
                                     </div>
                                 </div>
@@ -2340,7 +2404,8 @@
                                 <div class="settings-group-title">
                                     <i class="material-icons-round">monetization_on</i> Pengaturan Keuangan
                                     <span style="flex:1"></span>
-                                    <button class="reset-btn" onclick="resetToDefault('insentif')">Reset Ke Default</button>
+                                    <button class="reset-btn" onclick="resetToDefault('insentif')">Reset Ke
+                                        Default</button>
                                 </div>
                                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px;">
                                     <div class="input-group">
@@ -2372,25 +2437,31 @@
                                 <div class="settings-group-title">
                                     <i class="material-icons-round">verified_user</i> Pegawai Kategori Khusus
                                 </div>
-                                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:16px;">Pegawai dalam daftar ini mendapat full insentif tanpa pengecekan jam masuk/pulang.</p>
+                                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:16px;">Pegawai
+                                    dalam daftar ini mendapat full insentif tanpa pengecekan jam masuk/pulang.</p>
                                 <div class="input-group" style="margin-bottom:12px;">
                                     <label>Tambah Pegawai Khusus</label>
                                     <div style="display:flex; gap:8px;">
                                         <select id="khususNamaSelect" class="input-group-control" style="flex:1;">
                                             <option value="">-- Pilih Pegawai --</option>
                                         </select>
-                                        <button class="btn btn-primary" onclick="addKhususFromSelect()" style="white-space:nowrap; height:40px;">
-                                            <i class="material-icons-round" style="font-size:18px;">person_add</i> Tambah
+                                        <button class="btn btn-primary" onclick="addKhususFromSelect()"
+                                            style="white-space:nowrap; height:40px;">
+                                            <i class="material-icons-round" style="font-size:18px;">person_add</i>
+                                            Tambah
                                         </button>
                                     </div>
                                 </div>
                                 <div>
-                                    <label style="font-size:12px; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.3px; margin-bottom:6px; display:block;">Daftar Pegawai Khusus</label>
+                                    <label
+                                        style="font-size:12px; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.3px; margin-bottom:6px; display:block;">Daftar
+                                        Pegawai Khusus</label>
                                     <div id="chipsKhusus" class="chip-container" style="min-height:60px;"></div>
                                 </div>
                                 <div style="margin-top:20px; text-align:right;">
                                     <button class="btn btn-primary" onclick="saveMasterKhusus()">
-                                        <i class="material-icons-round" style="font-size:18px;">save</i> Simpan Data Pegawai
+                                        <i class="material-icons-round" style="font-size:18px;">save</i> Simpan Data
+                                        Pegawai
                                     </button>
                                 </div>
                             </div>
@@ -2404,7 +2475,8 @@
                                     <span style="flex:1"></span>
                                     <button class="btn btn-outline btn-sm" onclick="addXtraRow()">+ Tambah Baru</button>
                                 </div>
-                                <div id="xtraListContainer" style="display:flex; flex-direction:column; gap:12px;"></div>
+                                <div id="xtraListContainer" style="display:flex; flex-direction:column; gap:12px;">
+                                </div>
                                 <div style="margin-top:20px; text-align:right;">
                                     <button class="btn btn-primary" onclick="saveXtraList()">Simpan Daftar</button>
                                 </div>
@@ -2423,18 +2495,26 @@
                                 </div>
                                 <div class="input-group">
                                     <label>Logo Sekolah</label>
-                                    <div style="border: 2px dashed var(--border); padding: 30px; border-radius: 16px; text-align: center; background: var(--bg-app);">
+                                    <div
+                                        style="border: 2px dashed var(--border); padding: 30px; border-radius: 16px; text-align: center; background: var(--bg-app);">
                                         <div style="margin-bottom: 20px;">
-                                            <img id="previewLogo" src="" style="max-height: 120px; display: none; margin: 0 auto; border-radius: 8px; box-shadow: var(--shadow-md);">
+                                            <img id="previewLogo" src=""
+                                                style="max-height: 120px; display: none; margin: 0 auto; border-radius: 8px; box-shadow: var(--shadow-md);">
                                             <div id="logoPlaceholder">
-                                                <i class="material-icons-round" style="font-size: 54px; color: var(--text-secondary);">add_photo_alternate</i>
-                                                <p style="font-size:12px; color:var(--text-secondary);">Seret gambar ke sini atau klik tombol</p>
+                                                <i class="material-icons-round"
+                                                    style="font-size: 54px; color: var(--text-secondary);">add_photo_alternate</i>
+                                                <p style="font-size:12px; color:var(--text-secondary);">Seret gambar ke
+                                                    sini atau klik tombol</p>
                                             </div>
                                         </div>
-                                        <input type="file" id="fileLogo" accept="image/*" style="display: none;" onchange="previewImage(this)">
+                                        <input type="file" id="fileLogo" accept="image/*" style="display: none;"
+                                            onchange="previewImage(this)">
                                         <div style="display:flex; gap:10px; justify-content:center;">
-                                            <button class="btn btn-outline" onclick="document.getElementById('fileLogo').click()">Pilih Gambar</button>
-                                            <button class="btn btn-primary" onclick="uploadLogo()" id="btnUploadLogo" disabled style="opacity: 0.5;">Upload & Simpan</button>
+                                            <button class="btn btn-outline"
+                                                onclick="document.getElementById('fileLogo').click()">Pilih
+                                                Gambar</button>
+                                            <button class="btn btn-primary" onclick="uploadLogo()" id="btnUploadLogo"
+                                                disabled style="opacity: 0.5;">Upload & Simpan</button>
                                         </div>
                                     </div>
                                 </div>
@@ -2754,7 +2834,7 @@
         function verifyAdminLogin() {
             const input = document.getElementById('adminPin').value;
             const error = document.getElementById('loginError');
-            
+
             if (input === ADMIN_PIN_MASTER) {
                 grantAccess();
             } else {
@@ -2958,7 +3038,7 @@
             db.ref('pengaturan').once('value', snap => {
                 const s = snap.val() || {};
                 masterSettings = s;
-                
+
                 // Waktu
                 document.getElementById('setBatasKepsek').value = s.batasKepsek || "";
                 document.getElementById('setBatasPiket').value = s.batasPiket || "";
@@ -3466,7 +3546,7 @@
                 if (!itemData) return;
 
                 const txtAlasan = itemData.alasan || alasanUser || "-";
-                let ketAdmin = ""; 
+                let ketAdmin = "";
 
                 if (action === 'approved') {
                     if (modeACC === 'dinas') {
@@ -4319,7 +4399,7 @@
                 db.ref('database').once('value', snapEmp => {
                     const employees = snapEmp.val() || {};
                     const nPegawai = Object.values(employees).filter(e => e.status === 'Aktif').length;
-                    
+
                     if (nPegawai > 0) {
                         // Kita butuh data historical dalam rentang 26-25
                         // Kita asumsikan cacheSekolah hanya berisi data hari ini (berdasarkan pendahulu)
@@ -4327,7 +4407,7 @@
                         db.ref('logs_presensi_sekolah').once('value', snapLogs => {
                             const logs = snapLogs.val() || {};
                             let totalUniquePresence = 0;
-                            
+
                             Object.keys(logs).forEach(tgl => {
                                 if (tgl >= cycle.start && tgl <= cycle.end) {
                                     const dayLogs = logs[tgl];
@@ -5820,4 +5900,3 @@
 </body>
 
 </html>
-
