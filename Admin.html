@@ -1166,56 +1166,6 @@
                 padding: 0;
             }
 
-            .settings-btn-v {
-                white-space: nowrap;
-                background: var(--bg-surface);
-                border: 1px solid var(--border);
-            }
-
-            .card-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-
-            .card-header-actions {
-                width: 100%;
-                justify-content: flex-start;
-            }
-
-            .card-header-actions>div {
-                flex-wrap: wrap;
-            }
-
-            .search-wrapper {
-                width: 100%;
-            }
-
-            .search-input-mini {
-                width: 100%;
-            }
-
-            .btn {
-                font-size: 11px;
-                padding: 6px 10px;
-            }
-
-            .auto-acc-wrapper {
-                padding: 4px 8px;
-            }
-
-            .auto-acc-label {
-                display: none;
-            }
-
-            .datetime-container {
-                font-size: 11px;
-            }
-
-            .dynamic-row {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
         .dynamic-row {
             display: grid;
             grid-template-columns: 2fr 1fr 2fr auto;
@@ -1556,7 +1506,7 @@
                 font-size: 11px !important;
             }
 
-            /* Make tables scrollable manually */
+            /* Make tables scrollable */
             .table-responsive,
             .table-wrapper {
                 width: 100%;
@@ -1564,20 +1514,20 @@
                 -webkit-overflow-scrolling: touch;
             }
 
-            /* Hide text labels inside header buttons on mobile */
-            .btn .date-text {
+            /* Aturan auto-acc label sembunyikan di mobile */
+            .auto-acc-label {
                 display: none;
             }
 
-            /* Stack card header actions on mobile */
-            .card-header {
-                gap: 12px;
-            }
-
-            /* Compact rekap actions */
-            .rekap-table-wide .card-header-actions {
+            /* Card header actions scroll horizontal */
+            .card-header-actions {
                 overflow-x: auto;
                 padding-bottom: 4px;
+            }
+
+            /* Dynamic rows jadi 2 kolom */
+            .dynamic-row {
+                grid-template-columns: 1fr 1fr;
             }
         }
 
@@ -1604,33 +1554,9 @@
                 min-width: 50px;
             }
 
-            /* Header overflow fix */
-            header {
-                flex-wrap: wrap;
-                height: auto;
-                min-height: var(--header-height);
-                padding: 8px 12px;
-            }
-
-            .header-actions {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                max-width: 100%;
-            }
-
-            /* Settings buttons scroll horizontal */
-            .settings-sidebar {
-                overflow-x: auto;
-                padding-bottom: 8px;
-            }
-
-            .settings-btn-v span {
-                display: none;
-            }
-
-            .settings-btn-v {
-                padding: 8px 10px;
-                justify-content: center;
+            /* Compact header for very small screens */
+            .auto-acc-wrapper {
+                padding: 4px 8px;
             }
 
             /* Compact filter buttons */
