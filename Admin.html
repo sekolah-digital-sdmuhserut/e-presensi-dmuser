@@ -1165,517 +1165,602 @@
                 box-shadow: none;
                 padding: 0;
             }
+        }
 
         .dynamic-row {
-            display: grid;
-            grid-template-columns: 2fr 1fr 2fr auto;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .dash-filter {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 10px;
-        }
-
-        .dash-tab {
-            padding: 6px 12px;
-            font-size: 12px;
-            cursor: pointer;
-            border-radius: 8px;
-            color: var(--text-secondary);
-            font-weight: 600;
-            border: 1px solid transparent;
-        }
-
-        .dash-tab.active {
-            background: var(--accent);
-            color: white;
-        }
-
-        .card-header-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .search-wrapper {
-            position: relative;
-            width: 220px;
-        }
-
-        .search-input-mini {
-            width: 100%;
-            padding: 7px 12px 7px 34px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background: var(--bg-surface);
-            color: var(--text-primary);
-            font-size: 13px;
-            outline: none;
-        }
-
-        .search-icon-mini {
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
-            font-size: 18px;
-            pointer-events: none;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(4px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .modal-overlay.open {
-            display: flex;
-            opacity: 1;
-        }
-
-        .modal-content {
-            background: var(--bg-surface);
-            width: 95%;
-            max-width: 1000px;
-            max-height: 90vh;
-            border-radius: 16px;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            border: 1px solid var(--border);
-            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .modal-content-sm {
-            max-width: 500px;
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(20px);
-                opacity: 0;
+                display: grid;
+                grid-template-columns: 2fr 1fr 2fr auto;
+                gap: 10px;
+                margin-bottom: 10px;
             }
 
-            to {
-                transform: translateY(0);
+            .dash-filter {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 15px;
+                border-bottom: 1px solid var(--border);
+                padding-bottom: 10px;
+            }
+
+            .dash-tab {
+                padding: 6px 12px;
+                font-size: 12px;
+                cursor: pointer;
+                border-radius: 8px;
+                color: var(--text-secondary);
+                font-weight: 600;
+                border: 1px solid transparent;
+            }
+
+            .dash-tab.active {
+                background: var(--accent);
+                color: white;
+            }
+
+            .card-header-actions {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+
+            .search-wrapper {
+                position: relative;
+                width: 220px;
+            }
+
+            .search-input-mini {
+                width: 100%;
+                padding: 7px 12px 7px 34px;
+                border-radius: 8px;
+                border: 1px solid var(--border);
+                background: var(--bg-surface);
+                color: var(--text-primary);
+                font-size: 13px;
+                outline: none;
+            }
+
+            .search-icon-mini {
+                position: absolute;
+                left: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--text-secondary);
+                font-size: 18px;
+                pointer-events: none;
+            }
+
+            .modal-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.5);
+                backdrop-filter: blur(4px);
+                display: none;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .modal-overlay.open {
+                display: flex;
                 opacity: 1;
             }
-        }
 
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: var(--bg-app);
-        }
-
-        .modal-header h3 {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .close-btn {
-            background: transparent;
-            border: none;
-            font-size: 24px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .close-btn:hover {
-            color: var(--danger);
-            transform: rotate(90deg);
-        }
-
-        .modal-body {
-            padding: 0;
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        .table-detail th {
-            background: #1e293b;
-            color: white;
-            position: sticky;
-            top: 0;
-            z-index: 20;
-            font-size: 12px;
-            border-right: 1px solid #334155;
-        }
-
-        .table-detail td {
-            vertical-align: middle;
-            border-right: 1px solid var(--border);
-        }
-
-        .table-detail td:last-child {
-            border-right: none;
-        }
-
-        /* Image Thumbnail for Table */
-        .img-thumb {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            border-radius: 8px;
-            cursor: pointer;
-            border: 1px solid var(--border);
-            transition: transform 0.2s;
-        }
-
-        .img-thumb:hover {
-            transform: scale(1.5);
-            z-index: 10;
-            position: relative;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Modal Image Big Preview */
-        .modal-img-preview {
-            width: 100%;
-            max-height: 400px;
-            object-fit: contain;
-            background: #f1f5f9;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
+            .modal-content {
+                background: var(--bg-surface);
+                width: 95%;
+                max-width: 1000px;
+                max-height: 90vh;
+                border-radius: 16px;
+                box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+                border: 1px solid var(--border);
+                animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(30px);
-                opacity: 0;
+            .modal-content-sm {
+                max-width: 500px;
             }
 
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
+            @keyframes slideUp {
+                from {
+                    transform: translateY(20px);
+                    opacity: 0;
+                }
 
-        @media print {
-            body * {
-                visibility: hidden;
+                to {
+                    transform: translateY(0);
+                    opacity: 1;
+                }
             }
 
-            #printArea,
-            #printArea * {
-                visibility: visible;
+            .modal-header {
+                padding: 20px;
+                border-bottom: 1px solid var(--border);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background: var(--bg-app);
+            }
+
+            .modal-header h3 {
+                font-size: 18px;
+                font-weight: 700;
+                color: var(--text-primary);
+            }
+
+            .close-btn {
+                background: transparent;
+                border: none;
+                font-size: 24px;
+                color: var(--text-secondary);
+                cursor: pointer;
+                transition: 0.2s;
+            }
+
+            .close-btn:hover {
+                color: var(--danger);
+                transform: rotate(90deg);
+            }
+
+            .modal-body {
+                padding: 0;
+                overflow-y: auto;
+                flex: 1;
+            }
+
+            .table-detail th {
+                background: #1e293b;
+                color: white;
+                position: sticky;
+                top: 0;
+                z-index: 20;
+                font-size: 12px;
+                border-right: 1px solid #334155;
+            }
+
+            .table-detail td {
+                vertical-align: middle;
+                border-right: 1px solid var(--border);
+            }
+
+            .table-detail td:last-child {
+                border-right: none;
+            }
+
+            /* Image Thumbnail for Table */
+            .img-thumb {
+                width: 50px;
+                height: 50px;
+                object-fit: cover;
+                border-radius: 8px;
+                cursor: pointer;
+                border: 1px solid var(--border);
+                transition: transform 0.2s;
+            }
+
+            .img-thumb:hover {
+                transform: scale(1.5);
+                z-index: 10;
+                position: relative;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            }
+
+            /* Modal Image Big Preview */
+            .modal-img-preview {
+                width: 100%;
+                max-height: 400px;
+                object-fit: contain;
+                background: #f1f5f9;
+                border-radius: 12px;
+                margin-bottom: 20px;
+                border: 1px solid var(--border);
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(12px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes slideIn {
+                from {
+                    transform: translateX(30px);
+                    opacity: 0;
+                }
+
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+
+            @media print {
+                body * {
+                    visibility: hidden;
+                }
+
+                #printArea,
+                #printArea * {
+                    visibility: visible;
+                }
+
+                #printArea {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    background: white;
+                    color: black;
+                    padding: 20px;
+                }
+
+                .sidebar,
+                header,
+                .modal-overlay,
+                .btn,
+                footer {
+                    display: none !important;
+                }
             }
 
             #printArea {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                background: white;
-                color: black;
-                padding: 20px;
-            }
-
-            .sidebar,
-            header,
-            .modal-overlay,
-            .btn,
-            footer {
-                display: none !important;
-            }
-        }
-
-        #printArea {
-            display: none;
-        }
-
-        /* =========================================
-           RESPONSIVE MOBILE STYLES (NEW)
-           ========================================= */
-        #sidebarOverlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 45;
-            display: none;
-            backdrop-filter: blur(4px);
-            animation: fadeIn 0.3s ease;
-        }
-
-        .mobile-toggle {
-            display: none;
-            background: var(--bg-app);
-            border: 1px solid var(--border);
-            color: var(--text-primary);
-            width: 40px;
-            height: 40px;
-            border-radius: var(--radius-sm);
-            cursor: pointer;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-        }
-
-        @media (max-width: 1024px) {
-            :root {
-                --sidebar-width: 260px;
-            }
-
-            .sidebar {
-                position: fixed;
-                left: calc(var(--sidebar-width) * -1);
-                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            }
-
-            body.sidebar-open .sidebar {
-                transform: translateX(var(--sidebar-width));
-            }
-
-            body.sidebar-open #sidebarOverlay {
-                display: block;
-            }
-
-            .main-wrapper {
-                margin-left: 0 !important;
-            }
-
-            header {
-                padding: 0 20px;
-            }
-
-            .mobile-toggle {
-                display: flex;
-            }
-        }
-
-        @media (max-width: 768px) {
-            /* ================================================
-               MOBILE: Sama seperti desktop, hanya diperkecil
-               ================================================ */
-
-            /* Font dasar lebih kecil */
-            body {
-                font-size: 11px;
-            }
-
-            /* Header lebih compact */
-            header {
-                padding: 0 10px;
-            }
-
-            .header-actions {
-                gap: 5px;
-            }
-
-            .date-text {
                 display: none;
             }
 
-            .live-time {
-                font-size: 11px;
-                min-width: 52px;
+            /* Rekap Full Summary Cards */
+            .rekap-summary-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+                margin-bottom: 20px;
             }
 
-            .datetime-container {
-                padding: 4px 8px;
-                gap: 5px;
+            .summary-card-mini {
+                background: var(--bg-surface);
+                border: 1px solid var(--border);
+                padding: 15px;
+                border-radius: 12px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .summary-mini-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .summary-mini-info h4 {
                 font-size: 10px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                color: var(--text-secondary);
+                margin-bottom: 4px;
             }
 
-            /* Content area lebih compact */
-            .content-area {
-                padding: 10px;
-            }
-
-            /* Card lebih compact */
-            .card {
-                padding: 12px;
-            }
-
-            .card-title {
-                font-size: 13px;
-            }
-
-            /* Stat grid dan stat cards diperkecil */
-            .stat-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
-            }
-
-            .stat-card {
-                padding: 10px 12px;
-            }
-
-            .stat-value {
-                font-size: 18px;
-            }
-
-            .stat-label {
-                font-size: 9px;
-            }
-
-            /* Tombol diperkecil */
-            .btn {
-                font-size: 11px;
-                padding: 5px 10px;
-            }
-
-            .btn-sm {
-                font-size: 10px;
-                padding: 3px 7px;
-            }
-
-            /* Tabel diperkecil + scroll horizontal */
-            .table-responsive,
-            .table-wrapper {
-                width: 100%;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            table {
-                font-size: 11px;
-            }
-
-            th, td {
-                padding: 5px 7px;
-                font-size: 11px;
-            }
-
-            /* Sidebar nav items diperkecil */
-            .nav-item {
-                font-size: 11px;
-                padding: 10px 14px;
-                gap: 8px;
-            }
-
-            .nav-item i {
-                font-size: 18px;
-            }
-
-            /* Input diperkecil */
-            .input-group-control, input, select, textarea {
-                font-size: 11px;
-                padding: 6px 10px;
-            }
-
-            /* Settings group card */
-            .settings-group-card {
-                padding: 14px;
-            }
-
-            .settings-group-title {
-                font-size: 13px;
-            }
-
-            /* Dynamic row 2 kolom */
-            .dynamic-row {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            /* Auto-acc label lebih compact */
-            .auto-acc-label {
-                font-size: 10px;
-            }
-
-            /* Notif dropdown lebih compact */
-            .notif-item {
-                font-size: 11px;
-            }
-
-            /* Card header actions scroll kalau overflow */
-            .card-header-actions {
-                overflow-x: auto;
-                padding-bottom: 2px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            /* Layar sangat kecil: diperkecil lagi */
-            body {
-                font-size: 10px;
-            }
-
-            .stat-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 6px;
-            }
-
-            .brand-text h1 {
-                font-size: 12px;
-            }
-
-            .brand-text p {
-                font-size: 9px;
-            }
-
-            .stat-value {
+            .summary-mini-info p {
                 font-size: 16px;
+                font-weight: 700;
+                color: var(--text-primary);
             }
 
-            .content-area {
-                padding: 8px;
+            /* Period Nav Custom Style */
+            .period-nav-container {
+                display: flex;
+                align-items: center;
+                background: var(--bg-app);
+                border: 1px solid var(--border);
+                border-radius: 30px;
+                padding: 4px;
             }
 
-            .card {
-                padding: 10px;
+            .period-nav-btn {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                border: none;
+                background: transparent;
+                color: var(--text-primary);
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s;
             }
 
-            table {
-                font-size: 10px;
+            .period-nav-btn:hover {
+                background: var(--border);
             }
 
-            th, td {
-                padding: 4px 6px;
+            .period-nav-label {
+                padding: 0 15px;
+                font-weight: 700;
+                font-size: 13px;
+                color: var(--accent);
+                min-width: 180px;
+                text-align: center;
             }
 
-            .btn {
-                font-size: 10px;
-                padding: 4px 8px;
+            /* =========================================
+           RESPONSIVE MOBILE STYLES (NEW)
+           ========================================= */
+            #sidebarOverlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 45;
+                display: none;
+                backdrop-filter: blur(4px);
+                animation: fadeIn 0.3s ease;
             }
 
-            .btn-sm {
-                font-size: 9px;
-                padding: 3px 6px;
+            .mobile-toggle {
+                display: none;
+                background: var(--bg-app);
+                border: 1px solid var(--border);
+                color: var(--text-primary);
+                width: 40px;
+                height: 40px;
+                border-radius: var(--radius-sm);
+                cursor: pointer;
+                align-items: center;
+                justify-content: center;
+                margin-right: 15px;
             }
 
-            /* Compact filter buttons */
-            .dash-filter {
-                flex-wrap: wrap;
-                gap: 4px;
+            @media (max-width: 1024px) {
+                :root {
+                    --sidebar-width: 260px;
+                }
+
+                .sidebar {
+                    position: fixed;
+                    left: calc(var(--sidebar-width) * -1);
+                    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                }
+
+                body.sidebar-open .sidebar {
+                    transform: translateX(var(--sidebar-width));
+                }
+
+                body.sidebar-open #sidebarOverlay {
+                    display: block;
+                }
+
+                .main-wrapper {
+                    margin-left: 0 !important;
+                }
+
+                header {
+                    padding: 0 20px;
+                }
+
+                .mobile-toggle {
+                    display: flex;
+                }
             }
-        }
+
+            @media (max-width: 768px) {
+                /* ================================================
+               MOBILE: Sama seperti desktop, hanya diperkecil
+               ================================================ */
+
+                /* Font dasar lebih kecil */
+                body {
+                    font-size: 11px;
+                }
+
+                /* Header lebih compact */
+                header {
+                    padding: 0 10px;
+                }
+
+                .header-actions {
+                    gap: 5px;
+                }
+
+                .date-text {
+                    display: none;
+                }
+
+                .live-time {
+                    font-size: 11px;
+                    min-width: 52px;
+                }
+
+                .datetime-container {
+                    padding: 4px 8px;
+                    gap: 5px;
+                    font-size: 10px;
+                }
+
+                /* Content area lebih compact */
+                .content-area {
+                    padding: 10px;
+                }
+
+                /* Card lebih compact */
+                .card {
+                    padding: 12px;
+                }
+
+                .card-title {
+                    font-size: 13px;
+                }
+
+                /* Stat grid dan stat cards diperkecil */
+                .stat-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 8px;
+                }
+
+                .stat-card {
+                    padding: 10px 12px;
+                }
+
+                .stat-value {
+                    font-size: 18px;
+                }
+
+                .stat-label {
+                    font-size: 9px;
+                }
+
+                /* Tombol diperkecil */
+                .btn {
+                    font-size: 11px;
+                    padding: 5px 10px;
+                }
+
+                .btn-sm {
+                    font-size: 10px;
+                    padding: 3px 7px;
+                }
+
+                /* Tabel diperkecil + scroll horizontal */
+                .table-responsive,
+                .table-wrapper {
+                    width: 100%;
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
+                }
+
+                table {
+                    font-size: 11px;
+                }
+
+                th,
+                td {
+                    padding: 5px 7px;
+                    font-size: 11px;
+                }
+
+                /* Sidebar nav items diperkecil */
+                .nav-item {
+                    font-size: 11px;
+                    padding: 10px 14px;
+                    gap: 8px;
+                }
+
+                .nav-item i {
+                    font-size: 18px;
+                }
+
+                /* Input diperkecil */
+                .input-group-control,
+                input,
+                select,
+                textarea {
+                    font-size: 11px;
+                    padding: 6px 10px;
+                }
+
+                /* Settings group card */
+                .settings-group-card {
+                    padding: 14px;
+                }
+
+                .settings-group-title {
+                    font-size: 13px;
+                }
+
+                /* Dynamic row 2 kolom */
+                .dynamic-row {
+                    grid-template-columns: 1fr 1fr;
+                }
+
+                /* Auto-acc label lebih compact */
+                .auto-acc-label {
+                    font-size: 10px;
+                }
+
+                /* Notif dropdown lebih compact */
+                .notif-item {
+                    font-size: 11px;
+                }
+
+                /* Card header actions scroll kalau overflow */
+                .card-header-actions {
+                    overflow-x: auto;
+                    padding-bottom: 2px;
+                }
+            }
+
+            @media (max-width: 480px) {
+
+                /* Layar sangat kecil: diperkecil lagi */
+                body {
+                    font-size: 10px;
+                }
+
+                .stat-grid {
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 6px;
+                }
+
+                .brand-text h1 {
+                    font-size: 12px;
+                }
+
+                .brand-text p {
+                    font-size: 9px;
+                }
+
+                .stat-value {
+                    font-size: 16px;
+                }
+
+                .content-area {
+                    padding: 8px;
+                }
+
+                .card {
+                    padding: 10px;
+                }
+
+                table {
+                    font-size: 10px;
+                }
+
+                th,
+                td {
+                    padding: 4px 6px;
+                }
+
+                .btn {
+                    font-size: 10px;
+                    padding: 4px 8px;
+                }
+
+                .btn-sm {
+                    font-size: 9px;
+                    padding: 3px 6px;
+                }
+
+                /* Compact filter buttons */
+                .dash-filter {
+                    flex-wrap: wrap;
+                    gap: 4px;
+                }
+            }
     </style>
 
 </head>
@@ -1916,40 +2001,82 @@
                     </div>
                 </div>
             </div>
-
             <!-- TAB REKAPAN FULL -->
             <div id="rekap_full" class="tab-content">
+                <!-- Summary Section -->
+                <div class="rekap-summary-grid">
+                    <div class="summary-card-mini">
+                        <div class="summary-mini-icon" style="background: var(--accent-light); color: var(--accent);">
+                            <i class="material-icons-round">payments</i>
+                        </div>
+                        <div class="summary-mini-info">
+                            <h4>Total Insentif</h4>
+                            <p id="rekapTotalInsentif">Rp 0</p>
+                        </div>
+                    </div>
+                    <div class="summary-card-mini">
+                        <div class="summary-mini-icon" style="background: var(--success-bg); color: var(--success);">
+                            <i class="material-icons-round">people</i>
+                        </div>
+                        <div class="summary-mini-info">
+                            <h4>Total Pegawai</h4>
+                            <p id="rekapTotalPegawai">0 Orang</p>
+                        </div>
+                    </div>
+                    <div class="summary-card-mini">
+                        <div class="summary-mini-icon" style="background: var(--warning-bg); color: var(--warning);">
+                            <i class="material-icons-round">calendar_today</i>
+                        </div>
+                        <div class="summary-mini-info">
+                            <h4>Hari Efektif</h4>
+                            <p id="rekapHariEfektif">0 Hari</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card rekap-table-wide">
-                    <div class="card-header">
-                        <div class="card-title">
+                    <div class="card-header" style="flex-wrap: wrap; gap: 15px;">
+                        <div class="card-title" style="margin-right: auto;">
                             <i class="material-icons-round"
                                 style="margin-right:8px; color:var(--accent)">receipt_long</i>
                             Rekapan Insentif Bulanan
                         </div>
-                        <div class="card-header-actions">
+
+                        <div class="card-header-actions" style="flex-wrap: wrap; gap: 10px;">
                             <div class="search-wrapper">
                                 <i class="material-icons-round search-icon-mini">search</i>
                                 <input type="text" class="search-input-mini" placeholder="Cari Nama..."
                                     onkeyup="filterTable('rekapFullBody', this.value)">
                             </div>
-                            <div style="display:flex; gap:10px; align-items:center;">
-                                <button class="btn btn-outline" onclick="changeRekapMonth(-1)"><i
-                                        class="material-icons-round" style="font-size:16px;">chevron_left</i> Bulan
-                                    Lalu</button>
-                                <div style="text-align:center; min-width:200px;">
-                                    <span id="rekapPeriodLabel"
-                                        style="font-weight:700; color:var(--text-secondary);">...</span>
-                                </div>
-                                <button class="btn btn-outline" onclick="changeRekapMonth(1)">Bulan Depan <i
-                                        class="material-icons-round" style="font-size:16px;">chevron_right</i></button>
-                                <div style="width:1px; height:24px; background:var(--border); margin:0 10px;"></div>
-                                <button class="btn btn-success" onclick="printRekapFull()"><i
-                                        class="material-icons-round" style="font-size:16px;">print</i> Cetak</button>
+
+                            <!-- New Period Navigator -->
+                            <div class="period-nav-container">
+                                <button class="period-nav-btn" onclick="changeRekapMonth(-1)"
+                                    title="Periode Sebelumnya">
+                                    <i class="material-icons-round">chevron_left</i>
+                                </button>
+                                <div class="period-nav-label" id="rekapPeriodLabel">...</div>
+                                <button class="period-nav-btn" onclick="changeRekapMonth(1)"
+                                    title="Periode Selanjutnya">
+                                    <i class="material-icons-round">chevron_right</i>
+                                </button>
                             </div>
+
+                            <button class="btn btn-outline" onclick="exportRekapCSV()"
+                                style="border-color: #16a34a; color: #16a34a;">
+                                <i class="material-icons-round" style="font-size:16px;">download</i> CSV
+                            </button>
+                            <button class="btn btn-success" onclick="printRekapFull()">
+                                <i class="material-icons-round" style="font-size:16px;">print</i> Cetak
+                            </button>
                         </div>
                     </div>
-                    <div style="margin-bottom:15px; font-size:13px; color:var(--text-secondary);">
-                        Periode: <strong id="labelStart">...</strong> s/d <strong id="labelEnd">...</strong>.
+                    <div
+                        style="padding: 0 20px 15px; font-size: 12px; color: var(--text-secondary); display: flex; justify-content: space-between; align-items: center;">
+                        <span>Rentang: <strong id="labelStart" style="color: var(--text-primary)">...</strong> s/d
+                            <strong id="labelEnd" style="color: var(--text-primary)">...</strong></span>
+                        <span id="labelCycleName"
+                            style="font-style: italic; font-weight: 600; color: var(--accent);"></span>
                     </div>
                     <div class="table-wrapper">
                         <table style="font-size:12px;">
@@ -1972,8 +2099,7 @@
                                 <tr>
                                     <td colspan="10"
                                         style="text-align:center; padding:30px; color:var(--text-secondary);">Memuat
-                                        data...
-                                    </td>
+                                        data...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -2148,15 +2274,11 @@
                                     onclick="filterIzin('approved', this)">Disetujui</button>
                                 <button class="btn btn-sm btn-outline" id="filterIzinRejected"
                                     onclick="filterIzin('rejected', this)">Ditolak</button>
+                                <button class="btn btn-sm btn-outline" id="filterIzinDeleted" 
+                                    onclick="filterIzin('deleted', this)" style="border-color:var(--danger); color:var(--danger);">Sampah</button>
                             </div>
                             <!-- Search -->
                             <div class="search-wrapper">
-                                <button class="btn btn-outline btn-sm" onclick="openTrashModal()"
-                                    title="Lihat Data yang Dihapus"
-                                    style="display:flex; align-items:center; gap:5px; margin-right:8px; border-color:var(--danger); color:var(--danger);">
-                                    <i class="material-icons-round" style="font-size:18px;">delete_sweep</i> Kotak
-                                    Sampah
-                                </button>
                                 <i class="material-icons-round search-icon-mini">search</i>
                                 <input type="text" id="searchIzinInput" class="search-input-mini"
                                     placeholder="Cari Nama..." onkeyup="renderIzinTable()">
@@ -2208,14 +2330,10 @@
                                     onclick="filterLaporan('approved', this)">Disetujui</button>
                                 <button class="btn btn-sm btn-outline" id="filterLaporanRejected"
                                     onclick="filterLaporan('rejected', this)">Ditolak</button>
+                                <button class="btn btn-sm btn-outline" id="filterLaporanDeleted" 
+                                    onclick="filterLaporan('deleted', this)" style="border-color:var(--danger); color:var(--danger);">Sampah</button>
                             </div>
                             <div class="search-wrapper">
-                                <button class="btn btn-outline btn-sm" onclick="openTrashModal()"
-                                    title="Lihat Data yang Dihapus"
-                                    style="display:flex; align-items:center; gap:5px; margin-right:8px; border-color:var(--danger); color:var(--danger);">
-                                    <i class="material-icons-round" style="font-size:18px;">delete_sweep</i> Kotak
-                                    Sampah
-                                </button>
                                 <i class="material-icons-round search-icon-mini">search</i>
                                 <input type="text" id="searchLaporanInput" class="search-input-mini"
                                     placeholder="Cari Nama..." onkeyup="renderLaporanTable()">
@@ -3858,6 +3976,7 @@
             tbody.innerHTML = "";
 
             let filtered = LaporanHistoryData.filter(item => {
+                if (LaporanFilterMode === 'all' && item.status === 'deleted') return false;
                 if (LaporanFilterMode !== 'all' && item.status !== LaporanFilterMode) return false;
                 if (searchVal && !item.nama.toLowerCase().includes(searchVal)) return false;
                 return true;
@@ -3929,15 +4048,60 @@
             else if (item.status === 'rejected') badge.classList.add('jam-bad');
             else badge.classList.add('jam-warning');
 
-            document.getElementById('btnDeleteLaporan').onclick = function () {
-                if (confirm("Hapus permanen riwayat Laporan ini?")) {
-                    if (item.status === 'approved') revokeLaporanFromLogs(item.nama, item.tanggal);
-                    db.ref('requests_revisi/' + key).remove().then(() => {
-                        showToast("Riwayat dihapus.");
+            const btnDelete = document.getElementById('btnDeleteLaporan');
+            const btnSave = document.querySelector('#LaporanDetailModal .btn-primary');
+            const statusSelect = document.getElementById('LaporanStatusSelect');
+            
+            // Manage UI if deleted
+            if (item.status === 'deleted') {
+                statusSelect.value = item.previousStatus || 'pending';
+                statusSelect.disabled = true;
+                btnSave.style.display = 'none';
+                
+                if (!document.getElementById('btnRestoreLaporan')) {
+                    const btnRestore = document.createElement('button');
+                    btnRestore.id = 'btnRestoreLaporan';
+                    btnRestore.className = 'btn btn-success';
+                    btnRestore.innerText = 'Pulihkan Data';
+                    btnDelete.parentNode.insertBefore(btnRestore, btnDelete);
+                }
+                const btnRestore = document.getElementById('btnRestoreLaporan');
+                btnRestore.style.display = 'block';
+                btnRestore.onclick = function() {
+                    db.ref('requests_revisi/' + key).update({ status: item.previousStatus || 'pending' }).then(() => {
+                        showToast("✅ Data Laporan dipulihkan.");
                         closeLaporanModal();
                     });
+                };
+                
+                btnDelete.innerText = 'Hapus Permanen';
+                btnDelete.onclick = function () {
+                    if (confirm("Hapus permanen riwayat Laporan ini? Data tidak bisa dikembalikan.")) {
+                        db.ref('requests_revisi/' + key).remove().then(() => {
+                            showToast("Riwayat dihapus permanen.");
+                            closeLaporanModal();
+                        });
+                    }
+                };
+            } else {
+                statusSelect.value = item.status;
+                statusSelect.disabled = false;
+                btnSave.style.display = 'block';
+                if (document.getElementById('btnRestoreLaporan')) {
+                    document.getElementById('btnRestoreLaporan').style.display = 'none';
                 }
-            };
+                
+                btnDelete.innerText = 'Hapus ke Sampah';
+                btnDelete.onclick = function () {
+                    if (confirm("Pindahkan data Laporan ini ke Kotak Sampah?")) {
+                        if (item.status === 'approved') revokeLaporanFromLogs(item.nama, item.tanggal);
+                        db.ref('requests_revisi/' + key).update({ status: 'deleted', previousStatus: item.status, deletedAt: Date.now() }).then(() => {
+                            showToast("🗑️ Riwayat dipindahkan ke Kotak Sampah.");
+                            closeLaporanModal();
+                        });
+                    }
+                };
+            }
 
             document.getElementById('LaporanDetailModal').classList.add('open');
         }
@@ -4077,6 +4241,7 @@
             tbody.innerHTML = "";
 
             let filtered = izinHistoryData.filter(item => {
+                if (izinFilterMode === 'all' && item.status === 'deleted') return false;
                 if (izinFilterMode !== 'all' && item.status !== izinFilterMode) return false;
                 if (searchVal && !item.nama.toLowerCase().includes(searchVal)) return false;
                 return true;
@@ -4162,7 +4327,50 @@
             else badge.classList.add('jam-warning');
 
             const delBtn = document.getElementById('btnDeleteIzin');
-            delBtn.onclick = function () { deleteIzinRequest(key); };
+            const saveBtn = document.querySelector('#izinDetailModal .btn-primary');
+            const statusSelect = document.getElementById('izinStatusSelect');
+
+            if (item.status === 'deleted') {
+                statusSelect.value = item.previousStatus || 'pending';
+                statusSelect.disabled = true;
+                saveBtn.style.display = 'none';
+
+                if (!document.getElementById('btnRestoreIzin')) {
+                    const btnRestore = document.createElement('button');
+                    btnRestore.id = 'btnRestoreIzin';
+                    btnRestore.className = 'btn btn-success';
+                    btnRestore.innerText = 'Pulihkan Data';
+                    delBtn.parentNode.insertBefore(btnRestore, delBtn);
+                }
+                const btnRestore = document.getElementById('btnRestoreIzin');
+                btnRestore.style.display = 'block';
+                btnRestore.onclick = function() {
+                    db.ref('requests_izin/' + key).update({ status: item.previousStatus || 'pending' }).then(() => {
+                        showToast("✅ Data Izin dipulihkan.");
+                        closeIzinModal();
+                    });
+                };
+
+                delBtn.innerText = 'Hapus Permanen';
+                delBtn.onclick = function () {
+                    if (confirm("Hapus permanen riwayat Izin ini? Data tidak bisa dikembalikan.")) {
+                        db.ref('requests_izin/' + key).remove().then(() => {
+                            showToast("Riwayat dihapus permanen.");
+                            closeIzinModal();
+                        });
+                    }
+                };
+            } else {
+                statusSelect.value = item.status;
+                statusSelect.disabled = false;
+                saveBtn.style.display = 'block';
+                if (document.getElementById('btnRestoreIzin')) {
+                    document.getElementById('btnRestoreIzin').style.display = 'none';
+                }
+
+                delBtn.innerText = 'Hapus ke Sampah';
+                delBtn.onclick = function () { deleteIzinRequest(key); };
+            }
 
             document.getElementById('izinDetailModal').classList.add('open');
         }
@@ -4281,14 +4489,19 @@
 
         function deleteIzinRequest(key) {
             if (!currentEditingIzinData) return;
-            if (!confirm("Yakin hapus data izin ini permanen?")) return;
+            if (!confirm("Pindahkan data izin ini ke Kotak Sampah?")) return;
 
-            if (currentEditingIzinData.status === 'approved') {
-                revokeIzinFromLogs(currentEditingIzinData.nama, currentEditingIzinData.tanggal);
+            const item = currentEditingIzinData;
+            if (item.status === 'approved') {
+                revokeIzinFromLogs(item.nama, item.tanggal);
             }
 
-            db.ref('requests_izin/' + key).remove().then(() => {
-                showToast("Data izin dihapus.");
+            db.ref('requests_izin/' + key).update({
+                status: 'deleted',
+                previousStatus: item.status,
+                deletedAt: Date.now()
+            }).then(() => {
+                showToast("🗑️ Data izin dipindahkan ke Kotak Sampah.");
                 closeIzinModal();
             }).catch(e => alert("Gagal menghapus: " + e.message));
         }
@@ -5015,22 +5228,54 @@
         // REKAP FULL (REALTIME)
         function getRekapPeriod(dateRef) {
             let year = dateRef.getFullYear();
-            let month = dateRef.getMonth();
-            let startPeriod = new Date(year, month, 26);
-            let endPeriod = new Date(year, month + 1, 25);
+            let month = dateRef.getMonth(); // 0 - 11
+
+            // Cycle: 26th of PREVIOUS month to 25th of CURRENT month
+            let startPeriod = new Date(year, month - 1, 26);
+            let endPeriod = new Date(year, month, 25);
+
             const formatDate = (d) => d.toISOString().split('T')[0];
+            const monthsIndo = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
             return {
                 start: formatDate(startPeriod),
                 end: formatDate(endPeriod),
-                label: formatTglSlash(startPeriod) + " s/d " + formatTglSlash(endPeriod)
+                label: `${startPeriod.getDate()} ${monthsIndo[startPeriod.getMonth()]} - ${endPeriod.getDate()} ${monthsIndo[endPeriod.getMonth()]} ${endPeriod.getFullYear()}`,
+                cycleName: monthsIndo[month] + " " + year
             };
         }
 
         function updateRekapPeriodLabel() {
             const period = getRekapPeriod(currentRekapDate);
-            document.getElementById('rekapPeriodLabel').innerText = period.label;
+            document.getElementById('rekapPeriodLabel').innerText = period.cycleName;
+            document.getElementById('labelCycleName').innerText = "Periode: " + period.label;
             document.getElementById('labelStart').innerText = period.start;
             document.getElementById('labelEnd').innerText = period.end;
+
+            // Update Summary Card placeholders
+            document.getElementById('rekapHariEfektif').innerText = (masterSettings.hariEfektif || 0) + " Hari";
+        }
+
+        function exportRekapCSV() {
+            if (!currentRekapData || Object.keys(currentRekapData).length === 0) return alert("Tidak ada data untuk diexport.");
+            const period = getRekapPeriod(currentRekapDate);
+
+            let csv = 'No,Nama Pegawai,Jabatan,Piket,Tertib Datang,Tertib Pulang,Pengajian,Ekstrakurikuler,Total\n';
+            let finalArray = Object.values(currentRekapData).sort((a, b) => a.nama.localeCompare(b.nama));
+
+            finalArray.forEach((item, index) => {
+                csv += `${index + 1},"${item.nama}","${item.jabatan}",${item.sumPiket},${item.sumTertibDatang},${item.sumTertibPulang},${item.sumPengajian},${item.sumEkstra},${item.total}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", `Rekap_Insentif_${period.cycleName.replace(' ', '_')}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
 
         function changeRekapMonth(offset) {
@@ -5260,20 +5505,31 @@
             let grandPiket = 0, grandTertibD = 0, grandTertibP = 0, grandPengajian = 0, grandEkstra = 0;
             currentRekapData = groupedData;
 
-            finalArray.forEach((item, index) => {
+            // Update Summary Section
+            document.getElementById('rekapTotalPegawai').innerText = finalArray.length + " Orang";
+
+            // Loop 1: Calculate Grand Totals
+            finalArray.forEach(item => {
                 grandTotal += item.total;
                 grandPiket += item.sumPiket;
                 grandTertibD += item.sumTertibDatang;
                 grandTertibP += item.sumTertibPulang;
                 grandPengajian += item.sumPengajian;
                 grandEkstra += item.sumEkstra;
+            });
 
+            // Update Summary Total Card
+            document.getElementById('rekapTotalInsentif').innerText = "Rp " + grandTotal.toLocaleString();
+
+            // Loop 2: Render Rows
+            finalArray.forEach((item, index) => {
                 const formatCol = (count, sum) => {
                     if (count === 0) return '-';
                     const nominalPerItem = sum / count;
                     return `<span style="font-size:11px; color:var(--text-secondary)">${count} x ${nominalPerItem.toLocaleString()}</span><br><strong>${sum.toLocaleString()}</strong>`;
                 };
 
+                const escapedName = escapeHtml(item.nama).replace(/'/g, "\\'");
                 const row = `
               <tr style="border-bottom:1px solid var(--border);">
                   <td style="text-align:center; font-weight:bold;">${index + 1}</td>
@@ -5286,7 +5542,7 @@
                   <td class="text-mono" style="text-align:right; color:${item.sumEkstra > 0 ? 'var(--danger)' : 'inherit'}">${formatCol(item.countEkstra, item.sumEkstra)}</td>
                   <td class="text-mono" style="text-align:right; font-weight:bold; color:var(--text-primary); font-size:14px;">Rp ${item.total.toLocaleString()}</td>
                   <td style="text-align:center;">
-                      <button class="btn btn-outline btn-sm" style="padding:4px 8px;" onclick="openDetailModal('${escapeHtml(item.nama).replace(/'/g, "\\'")}')">
+                      <button class="btn btn-outline btn-sm" style="padding:4px 8px;" onclick="openDetailModal('${escapedName}')">
                           <i class="material-icons-round" style="font-size:16px;">visibility</i>
                       </button>
                   </td>
@@ -5889,11 +6145,20 @@
             Object.keys(data).forEach(key => {
                 const item = data[key];
                 const tr = document.createElement('tr');
+                
+                let jamText = "";
+                if (item.jamDatang || item.jamPulang) {
+                    jamText = `${formatJam(item.jamDatang)} - ${formatJam(item.jamPulang)}`;
+                } else {
+                    const typeLabel = item.originalFolder === 'requests_izin' ? 'Izin' : item.originalFolder === 'requests_revisi' ? 'Laporan' : 'Lainnya';
+                    jamText = `<span style="font-style:italic; font-size:11px; color:var(--text-secondary);">${escapeHtml(item.jenis || typeLabel)}</span>`;
+                }
+
                 tr.innerHTML = `
                     <td style="text-align:center;">${index++}</td>
                     <td style="font-weight:700;">${escapeHtml(item.nama)}</td>
                     <td>${escapeHtml(item.originalDate)}</td>
-                    <td>${formatJam(item.jamDatang)} - ${formatJam(item.jamPulang)}</td>
+                    <td>${jamText}</td>
                     <td style="text-align:center;">
                         <button class="btn btn-success btn-sm" onclick="restorePresensi('${key}')" title="Pulihkan Data">
                             <i class="material-icons-round" style="font-size:16px;">restore</i> Pulihkan
@@ -5915,8 +6180,15 @@
                 const { originalFolder, originalDate, originalKey, deletedAt, ...rest } = data;
                 const targetFolder = originalFolder || "logs_presensi_sekolah";
 
+                let restorePath = `${targetFolder}/${originalDate}/${originalKey}`;
+                
+                // Khusus untuk izin dan revisi path mereka tidak pakai tanggal
+                if (targetFolder === 'requests_izin' || targetFolder === 'requests_revisi') {
+                    restorePath = `${targetFolder}/${originalKey}`;
+                }
+
                 // Kembalikan ke lokasi asli
-                db.ref(`${targetFolder}/${originalDate}/${originalKey}`).set(rest).then(() => {
+                db.ref(restorePath).set(rest).then(() => {
                     // Hapus dari trash
                     return db.ref(`logs_presensi_sekolah/_trash_universal/${trashKey}`).remove();
                 }).then(() => {
