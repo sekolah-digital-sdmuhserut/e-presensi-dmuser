@@ -1168,6 +1168,39 @@
                 background: var(--bg-surface);
                 border: 1px solid var(--border);
             }
+            .card-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .card-header-actions {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .card-header-actions > div {
+                flex-wrap: wrap;
+            }
+            .search-wrapper {
+                width: 100%;
+            }
+            .search-input-mini {
+                width: 100%;
+            }
+            .btn {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+            .auto-acc-wrapper {
+                padding: 4px 8px;
+            }
+            .auto-acc-label {
+                display: none;
+            }
+            .datetime-container {
+                font-size: 11px;
+            }
+            .dynamic-row {
+                grid-template-columns: 1fr 1fr;
+            }
         }
 
         .dynamic-row {
@@ -1486,7 +1519,7 @@
                 padding: 0 15px;
             }
             .header-actions {
-                gap: 10px;
+                gap: 6px;
             }
             .date-text {
                 display: none;
@@ -1499,12 +1532,23 @@
                 font-size: 11px !important;
             }
             /* Make tables scrollable manually */
-            .table-responsive {
+            .table-responsive, .table-wrapper {
                 width: 100%;
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
-                border-radius: var(--radius-md);
-                border: 1px solid var(--border);
+            }
+            /* Hide text labels inside header buttons on mobile */
+            .btn .date-text {
+                display: none;
+            }
+            /* Stack card header actions on mobile */
+            .card-header {
+                gap: 12px;
+            }
+            /* Compact rekap actions */
+            .rekap-table-wide .card-header-actions {
+                overflow-x: auto;
+                padding-bottom: 4px;
             }
         }
 
@@ -1519,10 +1563,41 @@
                 font-size: 9px;
             }
             .datetime-container {
-                padding: 4px 10px;
+                padding: 4px 8px;
+                gap: 6px;
             }
             .live-time {
-                font-size: 12px;
+                font-size: 11px;
+                min-width: 50px;
+            }
+            /* Header overflow fix */
+            header {
+                flex-wrap: wrap;
+                height: auto;
+                min-height: var(--header-height);
+                padding: 8px 12px;
+            }
+            .header-actions {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                max-width: 100%;
+            }
+            /* Settings buttons scroll horizontal */
+            .settings-sidebar {
+                overflow-x: auto;
+                padding-bottom: 8px;
+            }
+            .settings-btn-v span {
+                display: none;
+            }
+            .settings-btn-v {
+                padding: 8px 10px;
+                justify-content: center;
+            }
+            /* Compact filter buttons */
+            .dash-filter {
+                flex-wrap: wrap;
+                gap: 4px;
             }
         }
     </style>
@@ -2297,13 +2372,26 @@
                                 <div class="settings-group-title">
                                     <i class="material-icons-round">verified_user</i> Pegawai Kategori Khusus
                                 </div>
-                                <div class="input-group">
-                                    <label>Daftar Nama (Full Insentif Tanpa Cek Jam)</label>
-                                    <textarea id="inputKhusus" rows="3" placeholder="Masukkan nama pegawai..."></textarea>
-                                    <small style="color:var(--text-secondary); font-size:11px;">Gunakan nama lengkap sesuai database. Gunakan tanda koma (,) jika lebih dari satu.</small>
+                                <p style="font-size:12px; color:var(--text-secondary); margin-bottom:16px;">Pegawai dalam daftar ini mendapat full insentif tanpa pengecekan jam masuk/pulang.</p>
+                                <div class="input-group" style="margin-bottom:12px;">
+                                    <label>Tambah Pegawai Khusus</label>
+                                    <div style="display:flex; gap:8px;">
+                                        <select id="khususNamaSelect" class="input-group-control" style="flex:1;">
+                                            <option value="">-- Pilih Pegawai --</option>
+                                        </select>
+                                        <button class="btn btn-primary" onclick="addKhususFromSelect()" style="white-space:nowrap; height:40px;">
+                                            <i class="material-icons-round" style="font-size:18px;">person_add</i> Tambah
+                                        </button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label style="font-size:12px; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:0.3px; margin-bottom:6px; display:block;">Daftar Pegawai Khusus</label>
+                                    <div id="chipsKhusus" class="chip-container" style="min-height:60px;"></div>
                                 </div>
                                 <div style="margin-top:20px; text-align:right;">
-                                    <button class="btn btn-primary" onclick="saveMasterKhusus()">Simpan Data Pegawai</button>
+                                    <button class="btn btn-primary" onclick="saveMasterKhusus()">
+                                        <i class="material-icons-round" style="font-size:18px;">save</i> Simpan Data Pegawai
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -2816,19 +2904,32 @@
                 }
             });
 
-            // Initialize Employee List for Piket Select
+            // Initialize Employee List for Piket & Khusus Select (Sorted A-Z)
             db.ref('database').on('value', snap => {
                 const employees = snap.val() || {};
-                const selectElement = document.getElementById('piketNamaSelect');
-                if (selectElement) {
-                    selectElement.innerHTML = '<option value="">-- Pilih Pegawai --</option>';
-                    Object.values(employees).forEach(emp => {
-                        if (emp.status === 'Aktif') {
-                            const opt = document.createElement('option');
-                            opt.value = emp.nama;
-                            opt.textContent = emp.nama;
-                            selectElement.appendChild(opt);
-                        }
+                const empList = Object.values(employees)
+                    .filter(emp => emp.status === 'Aktif')
+                    .sort((a, b) => (a.nama || '').localeCompare(b.nama || '', 'id'));
+
+                const piketSelect = document.getElementById('piketNamaSelect');
+                if (piketSelect) {
+                    piketSelect.innerHTML = '<option value="">-- Pilih Pegawai --</option>';
+                    empList.forEach(emp => {
+                        const opt = document.createElement('option');
+                        opt.value = emp.nama;
+                        opt.textContent = emp.nama;
+                        piketSelect.appendChild(opt);
+                    });
+                }
+
+                const khususSelect = document.getElementById('khususNamaSelect');
+                if (khususSelect) {
+                    khususSelect.innerHTML = '<option value="">-- Pilih Pegawai --</option>';
+                    empList.forEach(emp => {
+                        const opt = document.createElement('option');
+                        opt.value = emp.nama;
+                        opt.textContent = emp.nama;
+                        khususSelect.appendChild(opt);
                     });
                 }
             });
@@ -2898,20 +2999,7 @@
             });
         }
 
-        function saveRules() {
-            const data = {
-                batasKepsek: document.getElementById('setBatasKepsek').value,
-                batasPiket: document.getElementById('setBatasPiket').value,
-                batasReguler: document.getElementById('setBatasReguler').value,
-                batasKaryawan: document.getElementById('setBatasKaryawan').value,
-                batasPulang: document.getElementById('setBatasPulang').value,
-                hariEfektif: document.getElementById('setHariEfektif').value
-            };
-            db.ref('pengaturan').update(data).then(() => {
-                showToast("✅ Aturan Waktu & Hari Efektif Disimpan");
-                renderDashboard(); // Refresh stats with new effective days
-            });
-        }
+        // saveRules (canonical version defined later at line ~4654 - this stub removed to avoid conflict)
 
         function getAttendanceCycle(date = new Date()) {
             const year = date.getFullYear();
@@ -2944,7 +3032,6 @@
             const hari = document.getElementById('piketHariSelect').value;
             const nama = document.getElementById('piketNamaSelect').value;
             if (!nama) return alert("Pilih nama pegawai terlebih dahulu!");
-
             addChipUI(hari, nama);
             document.getElementById('piketNamaSelect').value = "";
         }
@@ -2953,35 +3040,57 @@
             const containerId = `chips${hari}`;
             const container = document.getElementById(containerId);
             if (!container) return;
-
-            // Cek duplikat
-            const existing = Array.from(container.querySelectorAll('.chip span')).map(s => s.textContent);
-            if (existing.includes(nama)) return;
-
+            const existing = Array.from(container.querySelectorAll('.chip span')).map(s => s.textContent.trim());
+            if (existing.includes(nama.trim())) return;
             const chip = document.createElement('div');
             chip.className = 'chip';
             chip.innerHTML = `<span>${nama}</span><i class="material-icons-round" onclick="this.parentElement.remove()">close</i>`;
             container.appendChild(chip);
         }
 
+        // === PEGAWAI KHUSUS CHIP FUNCTIONS ===
+        function addKhususFromSelect() {
+            const select = document.getElementById('khususNamaSelect');
+            const nama = select.value;
+            if (!nama) return alert('Pilih nama pegawai terlebih dahulu!');
+            addKhususChip(nama);
+            select.value = '';
+        }
+
+        function addKhususChip(nama) {
+            const container = document.getElementById('chipsKhusus');
+            if (!container) return;
+            const existing = Array.from(container.querySelectorAll('.chip span')).map(s => s.textContent.trim());
+            if (existing.includes(nama.trim())) return;
+            const chip = document.createElement('div');
+            chip.className = 'chip';
+            chip.innerHTML = `<span>${nama}</span><i class="material-icons-round" onclick="this.parentElement.remove()">close</i>`;
+            container.appendChild(chip);
+        }
+
+        // savePiket: saves chips to correct path as arrays
         function savePiket() {
             const piketData = {
-                Senin: getChipsData('Senin'),
-                Selasa: getChipsData('Selasa'),
-                Rabu: getChipsData('Rabu'),
-                Kamis: getChipsData('Kamis'),
-                Jumat: getChipsData('Jumat')
+                Senin: getChipsArray('Senin'),
+                Selasa: getChipsArray('Selasa'),
+                Rabu: getChipsArray('Rabu'),
+                Kamis: getChipsArray('Kamis'),
+                Jumat: getChipsArray('Jumat')
             };
-
-            db.ref('pengaturan/piket').set(piketData)
+            db.ref('pengaturan/masterData/piket').set(piketData)
                 .then(() => showToast("✅ Jadwal Piket Berhasil Diperbarui"))
                 .catch(e => alert("Gagal Simpan: " + e.message));
         }
 
-        function getChipsData(hari) {
+        function getChipsArray(hari) {
             const container = document.getElementById(`chips${hari}`);
-            if (!container) return "";
-            return Array.from(container.querySelectorAll('.chip span')).map(s => s.textContent).join('\n');
+            if (!container) return [];
+            return Array.from(container.querySelectorAll('.chip span')).map(s => s.textContent.trim()).filter(s => s);
+        }
+
+        // Legacy helper (kept for compatibility)
+        function getChipsData(hari) {
+            return getChipsArray(hari).join('\n');
         }
 
         function toggleTheme() {
@@ -4617,68 +4726,103 @@
             if (!masterSettings && masterSettings !== false) return;
 
             const r = masterSettings.rules || {};
-            if (r['Batas Kepala Sekolah']) document.getElementById('setBatasKepsek').value = r['Batas Kepala Sekolah'].jam;
-            if (r['Batas Piket']) document.getElementById('setBatasPiket').value = r['Batas Piket'].jam;
-            if (r['Batas Reguler']) document.getElementById('setBatasReguler').value = r['Batas Reguler'].jam;
-            if (r['Batas datang Karyawan']) document.getElementById('setBatasKaryawan').value = r['Batas datang Karyawan'].jam;
-            if (r['Batas Pulang']) document.getElementById('setBatasPulang').value = r['Batas Pulang'].jam;
+            if (r['Batas Kepala Sekolah'] && document.getElementById('setBatasKepsek'))
+                document.getElementById('setBatasKepsek').value = r['Batas Kepala Sekolah'].jam || '';
+            if (r['Batas Piket'] && document.getElementById('setBatasPiket'))
+                document.getElementById('setBatasPiket').value = r['Batas Piket'].jam || '';
+            if (r['Batas Reguler'] && document.getElementById('setBatasReguler'))
+                document.getElementById('setBatasReguler').value = r['Batas Reguler'].jam || '';
+            if (r['Batas datang Karyawan'] && document.getElementById('setBatasKaryawan'))
+                document.getElementById('setBatasKaryawan').value = r['Batas datang Karyawan'].jam || '';
+            if (r['Batas Pulang'] && document.getElementById('setBatasPulang'))
+                document.getElementById('setBatasPulang').value = r['Batas Pulang'].jam || '';
+            if (masterSettings.hariEfektif && document.getElementById('setHariEfektif'))
+                document.getElementById('setHariEfektif').value = masterSettings.hariEfektif;
 
-            if (r['Insentif Piket Tepat']) document.getElementById('setInsPiket').value = r['Insentif Piket Tepat'].nominal;
-            if (r['Insentif Tertib']) document.getElementById('setInsTertib').value = r['Insentif Tertib'].nominal;
-            if (r['Insentif Pulang']) document.getElementById('setInsPulang').value = r['Insentif Pulang'].nominal;
-            if (r['Insentif Pengajian']) document.getElementById('setInsPengajian').value = r['Insentif Pengajian'].nominal;
+            if (r['Insentif Piket Tepat'] && document.getElementById('setInsPiket'))
+                document.getElementById('setInsPiket').value = r['Insentif Piket Tepat'].nominal || 0;
+            if (r['Insentif Tertib'] && document.getElementById('setInsTertib'))
+                document.getElementById('setInsTertib').value = r['Insentif Tertib'].nominal || 0;
+            if (r['Insentif Pulang'] && document.getElementById('setInsPulang'))
+                document.getElementById('setInsPulang').value = r['Insentif Pulang'].nominal || 0;
+            if (r['Insentif Pengajian'] && document.getElementById('setInsPengajian'))
+                document.getElementById('setInsPengajian').value = r['Insentif Pengajian'].nominal || 0;
 
+            // === POPULATE PIKET CHIPS ===
             const m = masterSettings.masterData || {};
             const piket = m.piket || {};
-            if (piket['Senin']) document.getElementById('piketSenin').value = piket['Senin'].join('\n');
-            if (piket['Selasa']) document.getElementById('piketSelasa').value = piket['Selasa'].join('\n');
-            if (piket['Rabu']) document.getElementById('piketRabu').value = piket['Rabu'].join('\n');
-            if (piket['Kamis']) document.getElementById('piketKamis').value = piket['Kamis'].join('\n');
-            if (piket['Jumat']) document.getElementById('piketJumat').value = piket['Jumat'].join('\n');
+            ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'].forEach(day => {
+                const container = document.getElementById(`chips${day}`);
+                if (container) {
+                    container.innerHTML = '';
+                    let names = piket[day] || [];
+                    if (typeof names === 'string') {
+                        names = names.split('\n').filter(n => n.trim());
+                    }
+                    names.forEach(name => { if (name && name.trim()) addChipUI(day, name.trim()); });
+                }
+            });
 
+            // === POPULATE KHUSUS CHIPS ===
             const khusus = m.khusus || [];
-            if (khusus.length > 0) document.getElementById('inputKhusus').value = khusus.join(', ');
+            const khususContainer = document.getElementById('chipsKhusus');
+            if (khususContainer) {
+                khususContainer.innerHTML = '';
+                const khususArr = Array.isArray(khusus) ? khusus : String(khusus).split(',').map(s => s.trim()).filter(s => s);
+                khususArr.forEach(name => { if (name) addKhususChip(name.trim()); });
+            }
 
+            // === POPULATE NAMA SEKOLAH ===
+            if (masterSettings.namaSekolah && document.getElementById('setNamaSekolah'))
+                document.getElementById('setNamaSekolah').value = masterSettings.namaSekolah;
+
+            // === POPULATE XTRA LIST ===
             const xtra = masterSettings.xtraList || [];
-            const container = document.getElementById('xtraListContainer');
-            container.innerHTML = "";
-            xtra.forEach(item => addXtraRow(item.nama, item.insentif, item.pendamping));
+            const xtraContainer = document.getElementById('xtraListContainer');
+            if (xtraContainer) {
+                xtraContainer.innerHTML = '';
+                xtra.forEach(item => addXtraRow(item.nama, item.insentif, item.pendamping));
+            }
 
+            // === POPULATE LOGO ===
             if (masterSettings.logoUrl) {
-                document.getElementById('previewLogo').src = masterSettings.logoUrl;
-                document.getElementById('previewLogo').style.display = 'block';
-                document.getElementById('previewIcon').style.display = 'none';
+                const prevLogo = document.getElementById('previewLogo');
+                const prevIcon = document.getElementById('logoPlaceholder');
+                if (prevLogo) { prevLogo.src = masterSettings.logoUrl; prevLogo.style.display = 'block'; }
+                if (prevIcon) prevIcon.style.display = 'none';
             }
         }
 
         function saveRules() {
+            // Save time rules only (insentif saved by saveNominal)
             const rules = {
                 "Batas Kepala Sekolah": { jam: document.getElementById('setBatasKepsek').value },
                 "Batas Piket": { jam: document.getElementById('setBatasPiket').value },
                 "Batas Reguler": { jam: document.getElementById('setBatasReguler').value },
                 "Batas datang Karyawan": { jam: document.getElementById('setBatasKaryawan').value },
-                "Batas Pulang": { jam: document.getElementById('setBatasPulang').value },
-                "Insentif Piket Tepat": { nominal: parseInt(document.getElementById('setInsPiket').value) || 0 },
-                "Insentif Tertib": { nominal: parseInt(document.getElementById('setInsTertib').value) || 0 },
-                "Insentif Pulang": { nominal: parseInt(document.getElementById('setInsPulang').value) || 0 },
-                "Insentif Pengajian": { nominal: parseInt(document.getElementById('setInsPengajian').value) || 0 }
+                "Batas Pulang": { jam: document.getElementById('setBatasPulang').value }
             };
-            db.ref('pengaturan/rules').update(rules).then(() => showToast("Aturan Waktu Disimpan!"));
-        }
-
-        function savePiket() {
-            const parseTextarea = (id) => document.getElementById(id).value.split('\n').map(s => s.trim()).filter(s => s);
-            const piketData = {
-                "Senin": parseTextarea('piketSenin'), "Selasa": parseTextarea('piketSelasa'),
-                "Rabu": parseTextarea('piketRabu'), "Kamis": parseTextarea('piketKamis'),
-                "Jumat": parseTextarea('piketJumat')
-            };
-            db.ref('pengaturan/masterData/piket').set(piketData).then(() => showToast("Jadwal Piket Disimpan!"));
+            const hariEfektif = document.getElementById('setHariEfektif').value;
+            const updates = {};
+            updates['pengaturan/rules/Batas Kepala Sekolah'] = rules['Batas Kepala Sekolah'];
+            updates['pengaturan/rules/Batas Piket'] = rules['Batas Piket'];
+            updates['pengaturan/rules/Batas Reguler'] = rules['Batas Reguler'];
+            updates['pengaturan/rules/Batas datang Karyawan'] = rules['Batas datang Karyawan'];
+            updates['pengaturan/rules/Batas Pulang'] = rules['Batas Pulang'];
+            updates['pengaturan/hariEfektif'] = hariEfektif ? parseInt(hariEfektif) : null;
+            db.ref().update(updates)
+                .then(() => { showToast("✅ Aturan Waktu & Hari Efektif Disimpan!"); renderDashboard(); })
+                .catch(e => showToast("❌ Gagal: " + e.message));
         }
 
         function saveMasterKhusus() {
-            const parse = (id) => document.getElementById(id).value.split(',').map(s => s.trim()).filter(s => s);
-            db.ref('pengaturan/masterData/khusus').set(parse('inputKhusus')).then(() => showToast("Data Karyawan Khusus Disimpan!"));
+            const container = document.getElementById('chipsKhusus');
+            const names = container
+                ? Array.from(container.querySelectorAll('.chip span')).map(s => s.textContent.trim()).filter(s => s)
+                : [];
+            db.ref('pengaturan/masterData/khusus').set(names)
+                .then(() => showToast("✅ Data Pegawai Khusus Disimpan!"))
+                .catch(e => showToast("❌ Gagal: " + e.message));
         }
 
         function saveNominal() {
