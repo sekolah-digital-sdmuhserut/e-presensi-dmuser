@@ -158,8 +158,8 @@
             height: 100vh;
             display: flex;
             overflow: hidden;
-            font-size: 11px;
-            line-height: 1.4;
+            font-size: 6px;
+            line-height: 1.3;
             scroll-behavior: smooth;
         }
 
@@ -191,11 +191,11 @@
         }
 
         .text-sm {
-            font-size: 11px;
+            font-size: 6px;
         }
 
         .text-xs {
-            font-size: 11px;
+            font-size: 6px;
         }
 
         .text-left {
@@ -326,9 +326,11 @@
             justify-content: space-between;
             align-items: center;
             padding: 0 40px;
+            padding-top: env(safe-area-inset-top, 0);
             box-shadow: var(--shadow-sm);
-            z-index: 40;
+            z-index: 200;
             flex-shrink: 0;
+            transition: all 0.3s ease;
             backdrop-filter: blur(10px);
         }
 
@@ -1570,18 +1572,12 @@
         }
 
         @media (max-width: 768px) {
-            /* ================================================
-               MOBILE: Sama seperti desktop, hanya diperkecil
-               ================================================ */
-
-            /* Font dasar lebih kecil */
             body {
-                font-size: 11px;
+                font-size: 6px;
             }
-
-            /* Header lebih compact */
             header {
-                padding: 0 10px;
+                padding: 10px 10px 0 10px;
+                height: 55px;
             }
 
             .header-actions {
