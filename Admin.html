@@ -1519,7 +1519,7 @@
 
         .mobile-toggle {
             display: none;
-            background: var(--bg-app);
+            background: var(--bg-surface);
             border: 1px solid var(--border);
             color: var(--text-primary);
             width: 40px;
@@ -1529,6 +1529,7 @@
             align-items: center;
             justify-content: center;
             margin-right: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         @media (max-width: 1024px) {
@@ -1851,7 +1852,7 @@
     <div class="main-wrapper">
         <header>
             <div style="display:flex; align-items:center; gap:8px;">
-                <button class="mobile-toggle" onclick="toggleSidebar()" style="display:flex;">
+                <button class="mobile-toggle" onclick="toggleSidebar()">
                     <i class="material-icons-round">menu</i>
                 </button>
                 <div style="font-weight: 600; color: var(--text-secondary);" class="date-text">Sistem Manajemen Sekolah
@@ -1958,7 +1959,7 @@
                         </div>
                         <div class="stat-info">
                             <h3 id="statPersentase">0%</h3>
-                            <p id="labelPeriode">Periode 26 - 25</p>
+                            <p id="labelPeriode">HARI EFEKTIF (26-25)</p>
                         </div>
                     </div>
                     <div class="stat-card">
@@ -4694,8 +4695,9 @@
                             });
 
                             const potentialTotal = nPegawai * nHariEfektif;
-                            elPersen.innerText = Math.min(100, percentage) + "%";
-                            elLabel.innerText = "Hari Efektif (26-25)";
+                            const percentage = potentialTotal > 0 ? (totalUniquePresence / potentialTotal) * 100 : 0;
+                            elPersen.innerText = Math.floor(Math.min(100, percentage)) + "%";
+                            elLabel.innerText = "HARI EFEKTIF (26-25)";
                             elLabel.title = "Kehadiran Riil vs Target (Hari Efektif x Pegawai)";
                         });
                     }
