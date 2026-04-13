@@ -1599,6 +1599,25 @@
             body {
                 font-size: 6px;
             }
+
+            .allowance-cell {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .btn-icon {
+                min-width: 32px;
+                width: 32px;
+                padding: 6px;
+                justify-content: center;
+            }
+
+            .btn-icon i {
+                margin: 0;
+            }
             header {
                 padding: 10px 10px 0 10px;
                 height: 55px;
@@ -5244,9 +5263,9 @@
               <td class="text-left">${escapeHtml(item.nama)}</td>
               <td>${escapeHtml(item.jabatan)}</td>
               <td style="text-align:right;">${item.gajiPokok ? 'Rp ' + item.gajiPokok.toLocaleString('id-ID') : '-'}</td>
-              <td style="text-align:right; display:flex; justify-content:flex-end; align-items:center; gap:8px;">
+              <td class="allowance-cell">
                   ${formatAllowanceCell(item)}
-                  ${item.totalTunjangan > 0 ? `<button class="btn btn-icon" style="min-width:0; padding:6px;" onclick="openAllowanceDetail('${escapeHtml(item.key)}')" title="Lihat detail tunjangan"><i class="material-icons-round" style="font-size:16px;">visibility</i></button>` : ''}
+                  ${item.totalTunjangan > 0 ? `<button class="btn btn-icon" onclick="openAllowanceDetail('${escapeHtml(item.key)}')" title="Lihat detail tunjangan"><i class="material-icons-round" style="font-size:16px;">visibility</i></button>` : ''}
               </td>
               <td><span class="jam-badge" style="background:${item.status === 'Aktif' ? 'var(--success-bg)' : '#f3f4f6'}; color:${item.status === 'Aktif' ? 'var(--success)' : '#9ca3af'}">${escapeHtml(item.status)}</span></td>
               <td style="text-align:center;">
