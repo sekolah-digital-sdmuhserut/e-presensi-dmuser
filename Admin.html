@@ -947,6 +947,11 @@
             height: 40px;
         }
 
+        .rekap-full-table th {
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
         th:hover {
             color: var(--accent);
         }
@@ -1663,17 +1668,11 @@
                 -webkit-overflow-scrolling: touch;
                 margin-bottom: 10px;
                 border-radius: 8px;
-            }
-            
-            table {
-                min-width: 600px; /* Ensure table doesn't squish too much, forces internal scroll instead of page zoom */
-            }
                 width: 100%;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
             }
 
             table {
+                min-width: 600px; /* Ensure table doesn't squish too much, forces internal scroll instead of page zoom */
                 font-size: 11px;
             }
 
@@ -2121,7 +2120,7 @@
                             style="font-style: italic; font-weight: 600; color: var(--accent);"></span>
                     </div>
                     <div class="table-wrapper">
-                        <table style="font-size: 11px;">
+                        <table class="rekap-full-table" style="font-size: 11px;">
                             <thead>
                                 <tr style="background:#1e293b; color:white;">
                                     <th width="3%" style="text-align:center;">No</th>
@@ -2132,9 +2131,8 @@
                                     <th width="15%" class="text-mono" style="text-align:center;">Tertib Pulang</th>
                                     <th width="10%" class="text-mono" style="text-align:center;">Pengajian</th>
                                     <th width="10%" class="text-mono" style="text-align:center;">Ekstrakurikuler</th>
-                                    <th width="10%" class="text-mono" style="text-align:center; font-weight:700;">Total
-                                        (Rp)</th>
-                                    <th width="7%" style="text-align:center;">AKSI</th>
+                                    <th width="10%" class="text-mono" style="text-align:center; white-space:nowrap;">Total (Rp)</th>
+                                    <th width="7%" style="text-align:center; white-space:nowrap;">AKSI</th>
                                 </tr>
                             </thead>
                             <tbody id="rekapFullBody">
@@ -2439,6 +2437,8 @@
                                     <th onclick="sortDbTable('nama')" style="cursor:pointer; text-align:left;"
                                         class="text-left">Nama &#8645;</th>
                                     <th onclick="sortDbTable('jabatan')" style="cursor:pointer;">Jabatan &#8645;</th>
+                                    <th onclick="sortDbTable('gajiPokok')" style="cursor:pointer;">Gaji Pokok &#8645;</th>
+                                    <th onclick="sortDbTable('totalTunjangan')" style="cursor:pointer;">Tunjangan &#8645;</th>
                                     <th onclick="sortDbTable('status')" style="cursor:pointer;">Status &#8645;</th>
                                     <th style="text-align:center;">Password</th>
                                     <th style="text-align:center;">AKSI</th>
@@ -2446,7 +2446,7 @@
                             </thead>
                             <tbody id="dbBody">
                                 <tr>
-                                    <td colspan="5" style="text-align:center;">Memuat data...</td>
+                                    <td colspan="8" style="text-align:center;">Memuat data...</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -2924,6 +2924,16 @@
                             <option value="Aktif">Aktif</option>
                             <option value="Tidak Aktif">Tidak Aktif</option>
                         </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Gaji Pokok</label>
+                        <input type="number" id="dbGajiPokok" class="input-group-control" placeholder="Masukkan gaji pokok" min="0">
+                    </div>
+                    <div class="input-group">
+                        <label>Tunjangan</label>
+                        <div id="dbCustomAllowances" style="display:grid; gap:10px; margin-bottom:10px;"></div>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="addDbCustomAllowanceRow()">Tambah Tunjangan</button>
+                        <small style="color:var(--text-secondary); font-size:11px;">Tambahkan tunjangan manual seperti wali kelas, guru mapel, transport, makan, atau tugas khusus.</small>
                     </div>
                     <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 10px;">
                         <button class="btn btn-outline" onclick="closeDbModal()">Batal</button>
@@ -4937,17 +4947,30 @@
             document.getElementById('dbNama').value = "";
             document.getElementById('dbJabatan').value = "";
             document.getElementById('dbStatus').value = "Aktif";
+            document.getElementById('dbGajiPokok').value = "";
+            document.getElementById('dbCustomAllowances').innerHTML = "";
+            addDbCustomAllowanceRow();
             document.getElementById('dbModalTitle').innerText = "Tambah Pegawai Baru";
             document.getElementById('dbFormModal').classList.add('open');
             document.getElementById('dbKode').focus();
         }
 
-        function openDbModalEdit(kode, nama, jabatan, status) {
+        function openDbModalEdit(kode) {
+            const currentDb = masterSettings.database || {};
+            const record = currentDb[kode] || {};
             document.getElementById('dbKode').value = kode;
             document.getElementById('dbKode').readOnly = false;
-            document.getElementById('dbNama').value = nama;
-            document.getElementById('dbJabatan').value = jabatan;
-            document.getElementById('dbStatus').value = status;
+            document.getElementById('dbNama').value = record.nama || "";
+            document.getElementById('dbJabatan').value = record.jabatan || "";
+            document.getElementById('dbStatus').value = record.status || "Aktif";
+            document.getElementById('dbGajiPokok').value = record.gajiPokok || "";
+            document.getElementById('dbCustomAllowances').innerHTML = "";
+            const customAllowances = Array.isArray(record.customAllowances) ? record.customAllowances : [];
+            if (customAllowances.length > 0) {
+                customAllowances.forEach(a => addDbCustomAllowanceRow(a.name, a.nominal));
+            } else {
+                addDbCustomAllowanceRow();
+            }
             document.getElementById('dbModalTitle').innerText = "Edit Data Pegawai";
             document.getElementById('dbFormModal').classList.add('open');
             document.getElementById('dbNama').focus();
@@ -4957,16 +4980,50 @@
             document.getElementById('dbFormModal').classList.remove('open');
         }
 
+        function getDbCustomAllowancesFromForm() {
+            const rows = document.querySelectorAll('#dbCustomAllowances .custom-allowance-row');
+            return Array.from(rows).map(row => {
+                const nameInput = row.querySelector('.dbCustomAllowanceName');
+                const valueInput = row.querySelector('.dbCustomAllowanceValue');
+                const name = nameInput ? nameInput.value.trim() : "";
+                const nominal = valueInput ? parseInt(valueInput.value) || 0 : 0;
+                return name ? { name, nominal } : null;
+            }).filter(Boolean);
+        }
+
+        function addDbCustomAllowanceRow(name = '', nominal = '') {
+            const container = document.getElementById('dbCustomAllowances');
+            const row = document.createElement('div');
+            row.className = 'custom-allowance-row';
+            row.style.display = 'grid';
+            row.style.gridTemplateColumns = '1fr 1fr auto';
+            row.style.gap = '10px';
+            row.innerHTML = `
+                <input type="text" class="input-group-control dbCustomAllowanceName" placeholder="Nama tunjangan" value="${escapeHtml(name)}">
+                <input type="number" min="0" class="input-group-control dbCustomAllowanceValue" placeholder="Nominal" value="${escapeHtml(nominal.toString())}">
+                <button type="button" class="btn btn-danger btn-sm" onclick="removeDbCustomAllowanceRow(this)">Hapus</button>
+            `;
+            container.appendChild(row);
+        }
+
+        function removeDbCustomAllowanceRow(button) {
+            const row = button.closest('.custom-allowance-row');
+            if (row) row.remove();
+        }
+
         function submitDbForm() {
             const kodeInput = document.getElementById('dbKode');
             const namaInput = document.getElementById('dbNama');
             const jabatanInput = document.getElementById('dbJabatan');
             const statusInput = document.getElementById('dbStatus');
+            const gajiInput = document.getElementById('dbGajiPokok');
 
             const kode = kodeInput.value.trim();
             const nama = namaInput.value.trim();
             const jabatan = jabatanInput.value.trim();
             const status = statusInput.value;
+            const gajiPokok = parseInt(gajiInput.value) || 0;
+            const customAllowances = getDbCustomAllowancesFromForm();
 
             if (!kode) { alert("Kode Pegawai wajib diisi!"); kodeInput.focus(); return; }
             if (!nama) { alert("Nama Pegawai wajib diisi!"); namaInput.focus(); return; }
@@ -4981,7 +5038,14 @@
                 }
             }
 
-            const payload = { nama: nama, jabatan: jabatan, status: status, updatedAt: Date.now() };
+            const payload = {
+                nama: nama,
+                jabatan: jabatan,
+                status: status,
+                gajiPokok: gajiPokok,
+                customAllowances: customAllowances,
+                updatedAt: Date.now()
+            };
 
             db.ref('database/' + kode).set(payload)
                 .then(() => {
@@ -4992,7 +5056,7 @@
                     return Promise.resolve();
                 })
                 .then(() => {
-                    alert("Data Berhasil Disimpan!");
+                    showToast("Data berhasil disimpan!");
                     closeDbModal();
                     const dbData = masterSettings.database || {};
                     renderDbTable(dbData);
@@ -5030,7 +5094,10 @@
             if (!data) return;
 
             let dbArray = Object.keys(data).map(key => {
-                return { key: key, ...data[key] };
+                const item = { key: key, ...data[key] };
+                const custom = Array.isArray(item.customAllowances) ? item.customAllowances : [];
+                item.totalTunjangan = custom.reduce((sum, allowance) => sum + (parseInt(allowance.nominal) || 0), 0);
+                return item;
             });
 
             dbArray.sort((a, b) => {
@@ -5057,6 +5124,8 @@
               <td style="font-weight:600">${escapeHtml(item.key)}</td>
               <td class="text-left">${escapeHtml(item.nama)}</td>
               <td>${escapeHtml(item.jabatan)}</td>
+              <td style="text-align:right;">${item.gajiPokok ? 'Rp ' + item.gajiPokok.toLocaleString('id-ID') : '-'}</td>
+              <td style="text-align:right;">${item.totalTunjangan ? 'Rp ' + item.totalTunjangan.toLocaleString('id-ID') : '-'}</td>
               <td><span class="jam-badge" style="background:${item.status === 'Aktif' ? 'var(--success-bg)' : '#f3f4f6'}; color:${item.status === 'Aktif' ? 'var(--success)' : '#9ca3af'}">${escapeHtml(item.status)}</span></td>
               <td style="text-align:center;">
                   ${hasPwd
@@ -5064,8 +5133,7 @@
                         : '<span class="jam-badge" style="background:#fef9c3;color:#a16207;">Default</span>'}
               </td>
               <td>
-                  <button class="btn btn-outline btn-sm edit-db-btn" style="margin-right:4px;" 
-                      data-kode="${escapeHtml(item.key)}" data-nama="${escapeHtml(item.nama)}" data-jabatan="${escapeHtml(item.jabatan)}" data-status="${escapeHtml(item.status)}">
+                  <button class="btn btn-outline btn-sm" style="margin-right:4px;" onclick="openDbModalEdit('${escapeHtml(item.key)}')">
                       <i class="material-icons-round" style="font-size:16px;">edit</i> Edit
                   </button>
                   <button class="btn btn-sm" style="background:#f59e0b;color:white;margin-right:4px;" onclick="resetPassword('${escapeHtml(item.key)}')" title="Reset password ke default (kode)">
@@ -5077,12 +5145,6 @@
               </td>
             `;
                 tbody.appendChild(tr);
-                const editBtn = tr.querySelector('.edit-db-btn');
-                if (editBtn) {
-                    editBtn.addEventListener('click', function () {
-                        openDbModalEdit(this.getAttribute('data-kode'), this.getAttribute('data-nama'), this.getAttribute('data-jabatan'), this.getAttribute('data-status'));
-                    });
-                }
             });
         }
 
@@ -5581,28 +5643,28 @@
             });
 
             // Update Summary Total Card
-            document.getElementById('rekapTotalInsentif').innerText = "Rp " + grandTotal.toLocaleString();
+            document.getElementById('rekapTotalInsentif').innerText = "Rp " + grandTotal.toLocaleString('id-ID');
 
             // Loop 2: Render Rows
             finalArray.forEach((item, index) => {
                 const formatCol = (count, sum) => {
                     if (count === 0) return '-';
-                    const nominalPerItem = sum / count;
-                    return `<span style="font-size:11px; color:var(--text-secondary)">${count} x ${nominalPerItem.toLocaleString()}</span><br><strong>${sum.toLocaleString()}</strong>`;
+                    const nominalPerItem = Math.round(sum / count);
+                    return `<span style="font-size:11px; color:var(--text-secondary)">${count} x ${nominalPerItem.toLocaleString('id-ID')}</span><br>${sum.toLocaleString('id-ID')}`;
                 };
 
                 const escapedName = escapeHtml(item.nama).replace(/'/g, "\\'");
                 const row = `
               <tr style="border-bottom:1px solid var(--border);">
-                  <td style="text-align:center; font-weight:bold;">${index + 1}</td>
-                  <td class="text-left" style="font-weight:700; color:var(--text-primary);">${escapeHtml(item.nama)}</td>
+                  <td style="text-align:center;">${index + 1}</td>
+                  <td class="text-left" style="color:var(--text-primary);">${escapeHtml(item.nama)}</td>
                   <td style="color:var(--text-secondary); font-size:11px;">${escapeHtml(item.jabatan)}</td>
                   <td class="text-mono" style="text-align:center; color:${item.sumPiket > 0 ? 'var(--success)' : 'inherit'}">${formatCol(item.countPiket, item.sumPiket)}</td>
                   <td class="text-mono" style="text-align:center; color:${item.sumTertibDatang > 0 ? 'var(--accent)' : 'inherit'}">${formatCol(item.countTertibDatang, item.sumTertibDatang)}</td>
                   <td class="text-mono" style="text-align:center; color:${item.sumTertibPulang > 0 ? 'var(--warning)' : 'inherit'}">${formatCol(item.countTertibPulang, item.sumTertibPulang)}</td>
                   <td class="text-mono" style="text-align:center; color:${item.sumPengajian > 0 ? '#d97706' : 'inherit'}">${formatCol(item.countPengajian, item.sumPengajian)}</td>
                   <td class="text-mono" style="text-align:center; color:${item.sumEkstra > 0 ? 'var(--danger)' : 'inherit'}">${formatCol(item.countEkstra, item.sumEkstra)}</td>
-                  <td class="text-mono" style="text-align:center; font-weight:bold; color:var(--text-primary); font-size:11px;">Rp ${item.total.toLocaleString()}</td>
+                  <td class="text-mono" style="text-align:center; color:var(--text-primary); font-size:11px;">Rp ${item.total.toLocaleString('id-ID')}</td>
                   <td style="text-align:center;">
                       <button class="btn btn-outline btn-sm" style="padding:4px 8px;" onclick="openDetailModal('${escapedName}')">
                           <i class="material-icons-round" style="font-size:16px;">visibility</i>
@@ -5613,14 +5675,14 @@
                 tbody.innerHTML += row;
             });
 
-            const trTotal = `<tr style="background:#1e293b; color:white; font-weight:700; border-top: 2px solid var(--border);">
+            const trTotal = `<tr style="background:#1e293b; color:white; border-top: 2px solid var(--border);">
             <td colspan="3" style="text-align:center; padding-right:20px;">GRAND TOTAL</td>
             <td class="text-mono" style="text-align:center;">${grandPiket > 0 ? grandPiket.toLocaleString() : '-'}</td>
             <td class="text-mono" style="text-align:center;">${grandTertibD.toLocaleString()}</td>
             <td class="text-mono" style="text-align:center;">${grandTertibP.toLocaleString()}</td>
             <td class="text-mono" style="text-align:center;">${grandPengajian.toLocaleString()}</td>
             <td class="text-mono" style="text-align:center;">${grandEkstra.toLocaleString()}</td>
-            <td class="text-mono" style="text-align:center; color:var(--accent); font-size:11px;">Rp ${grandTotal.toLocaleString()}</td>
+            <td class="text-mono" style="text-align:center; color:var(--accent); font-size:11px;">Rp ${grandTotal.toLocaleString('id-ID')}</td>
             <td></td>
         </tr>`;
             tbody.innerHTML += trTotal;
