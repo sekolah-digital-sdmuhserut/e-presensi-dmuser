@@ -3095,7 +3095,7 @@
                         style="vertical-align:middle; margin-right:8px; color:var(--danger);">delete_sweep</i>Kotak
                     Sampah Presensi</h3>
                 <button class="close-btn"
-                    onclick="closeTrashModal()">&times;</button>
+                    onclick="document.getElementById('trashModal').classList.remove('open')">&times;</button>
             </div>
             <div class="modal-body" style="padding: 0;">
                 <div
@@ -6493,7 +6493,7 @@
             <td class="text-left">${escapeHtml(item.nama)}</td>
             <td>${escapeHtml(formatJam(jD))}</td>
             <td>${escapeHtml(item.keterangan)}</td>
-            <td style="text-align:right">Rp ${(item.totalInsentif || 0).toLocaleString()}</td>
+            
             <td style="text-align:center;">
                 <div style="display:flex; gap:4px; justify-content:center;">
                     <button class="btn btn-outline btn-sm" onclick="openEditPresensi('${uniqueKey}', '${item.tgl}', '${item.nama.replace(/'/g, "\\'")}', '${jD}', '${jP}', 'logs_ekstrakurikuler')" title="Edit">
@@ -6653,32 +6653,15 @@
         }
 
         // 3. LOGIKA KOTAK SAMPAH & RESTORE
-        let _trashListener = null;
-
         function openTrashModal() {
             document.getElementById('trashModal').classList.add('open');
             const tbody = document.getElementById('trashBody');
             tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:20px;">Memuat data sampah...</td></tr>';
 
-            // Matikan listener lama jika ada
-            if (_trashListener) {
-                rootRef('logs_presensi_sekolah/_trash_universal').off('value', _trashListener);
-                _trashListener = null;
-            }
-
-            // Pasang listener REALTIME agar otomatis update tanpa reload
-            _trashListener = rootRef('logs_presensi_sekolah/_trash_universal').on('value', snap => {
-                renderTrashTable(snap.val());
+            rootRef('logs_presensi_sekolah/_trash_universal').once('value', snap => {
+                const data = snap.val();
+                renderTrashTable(data);
             });
-        }
-
-        function closeTrashModal() {
-            document.getElementById('trashModal').classList.remove('open');
-            // Matikan listener realtime saat modal ditutup agar tidak boros bandwidth
-            if (_trashListener) {
-                rootRef('logs_presensi_sekolah/_trash_universal').off('value', _trashListener);
-                _trashListener = null;
-            }
         }
 
         function renderTrashTable(data) {
@@ -6741,7 +6724,7 @@
                     return db.ref(`logs_presensi_sekolah/_trash_universal/${trashKey}`).remove();
                 }).then(() => {
                     showToast("✅ Data berhasil dipulihkan!");
-                    // Tidak perlu openTrashModal() lagi — listener realtime otomatis memperbarui tabel
+                    openTrashModal();
                 }).catch(e => showToast("Gagal memulihkan: " + e.message));
             });
         }
@@ -6750,7 +6733,7 @@
             if (!confirm("Hapus permanen dari kotak sampah?")) return;
             db.ref(`logs_presensi_sekolah/_trash_universal/${trashKey}`).remove().then(() => {
                 showToast("🗑️ Data dihapus permanen.");
-                // Tidak perlu openTrashModal() lagi — listener realtime otomatis memperbarui tabel
+                openTrashModal();
             });
         }
     </script>
